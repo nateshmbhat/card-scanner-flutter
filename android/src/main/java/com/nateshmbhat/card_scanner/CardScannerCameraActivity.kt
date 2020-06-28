@@ -13,10 +13,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
-import com.nateshmbhat.card_scanner.models.CardDetails
-import java.io.File
+import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.app.Activity
+
+import android.content.Intent
+import com.nateshmbhat.card_scanner.scanner_core.TextRecognitionProcessor
 
 typealias onCardScanned = (cardDetails: CardDetails) -> Unit
 
@@ -110,9 +113,11 @@ class CardScannerCameraActivity : AppCompatActivity() {
     val analysisUseCase = ImageAnalysis.Builder().build()
             .also {
               it.setAnalyzer(cameraExecutor, TextRecognitionProcessor { cardDetails ->
-                CardScannerPlugin.channel.invokeMethod("card_details", cardDetails.toString())
-                finish()
                 Log.d(TAG, "Card recognized : $cardDetails")
+                val returnIntent: Intent = Intent()
+                returnIntent.putExtra(SCAN_RESULT, cardDetails)
+                setResult(Activity.RESULT_OK, returnIntent)
+                this.finish()
               })
             }
     cameraProvider!!.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, analysisUseCase)
@@ -120,9 +125,10 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   companion object {
     private const val TAG = "CameraXBasic"
-    private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     private const val REQUEST_CODE_PERMISSIONS = 10
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+    @JvmField
+    val SCAN_RESULT : String = "scan_result"
   }
 
   override fun onResume() {

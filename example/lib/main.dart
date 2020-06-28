@@ -14,25 +14,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
-  String cardDetails;
+  Map<String, String> _cardDetails;
 
   @override
   void initState() {
     CardScanner.init();
     super.initState();
-    initPlatformState();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
+  Future<void> scanCard() async {
+    Map<String, String> cardDetails = {};
     try {
-      platformVersion = await CardScanner.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      cardDetails = await CardScanner.scanCard();
+    } on PlatformException catch(e) {
+      print('Failed to get platform version : $e');
+      return;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -41,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      _cardDetails = cardDetails;
     });
   }
 
@@ -56,15 +53,13 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('Running on: $_platformVersion\n'),
               RaisedButton(
                 onPressed: () async {
-                  cardDetails = (await CardScanner.scanCard());
-                  setState(() {});
+                  scanCard();
                 },
                 child: Text('scan card'),
               ),
-              Text('Card Details : $cardDetails')
+              Text('Card Details : $_cardDetails')
             ],
           ),
         ),

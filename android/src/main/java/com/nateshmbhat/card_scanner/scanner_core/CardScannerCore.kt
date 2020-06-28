@@ -1,8 +1,8 @@
-package com.nateshmbhat.card_scanner
+package com.nateshmbhat.card_scanner.scanner_core
 
 import android.util.Log
 import com.google.mlkit.vision.text.Text
-import com.nateshmbhat.card_scanner.models.CardDetails
+import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
 
 //@author nateshmbhat created on 27,June,2020
 
@@ -11,7 +11,6 @@ class CardScannerCore(private val textItem: Text) {
   private lateinit var cardDetails: CardDetails
 
   public fun scanCard(): CardDetails? {
-    Log.d(TAG, "scanCard: ${textItem.text}")
     if (!isCardNumberInText(textItem.text)) {
       return null
     }
@@ -20,6 +19,7 @@ class CardScannerCore(private val textItem: Text) {
     val cleanedCardNumber = cleanRawCardNumber(cardNumber)
 
     if (!checkLuhnAlgorithm(cleanedCardNumber)) {
+      Log.d(TAG, "scanCard: card : $cardNumber , Luhn FAILED ");
       return null
     }
     cardDetails = CardDetails(cardNumber = cleanedCardNumber)

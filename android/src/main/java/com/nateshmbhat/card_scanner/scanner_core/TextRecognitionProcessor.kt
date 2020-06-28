@@ -1,4 +1,4 @@
-package com.nateshmbhat.card_scanner
+package com.nateshmbhat.card_scanner.scanner_core
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -6,7 +6,8 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
-import com.nateshmbhat.card_scanner.models.CardDetails
+import com.nateshmbhat.card_scanner.onCardScanned
+import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
 
 
 class TextRecognitionProcessor(private val listener: onCardScanned) : ImageAnalysis.Analyzer {

@@ -12,13 +12,9 @@ class CardScanner {
     });
   }
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-
-  static Future<String> scanCard() async {
-    final String value = await _channel.invokeMethod('scan_card');
+  static Future<Map<String,String>> scanCard() async {
+    final value = await _channel.invokeMapMethod<String,String>('scan_card');
+    print("method channel : GOT VALUE FROM METHOD CHANNEL : $value");
     return value;
   }
 }
