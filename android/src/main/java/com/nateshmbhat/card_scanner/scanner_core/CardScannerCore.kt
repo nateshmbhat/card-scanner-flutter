@@ -22,6 +22,7 @@ class CardScannerCore(private val textItem: Text) {
       Log.d(TAG, "scanCard: card : $cardNumber , Luhn FAILED ");
       return null
     }
+    Log.d(TAG, "scanCard: card : $cardNumber , Luhn PASSED ");
     cardDetails = CardDetails(cardNumber = cleanedCardNumber)
     return cardDetails
   }

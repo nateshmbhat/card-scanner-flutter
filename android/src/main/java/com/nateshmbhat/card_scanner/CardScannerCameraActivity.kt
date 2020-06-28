@@ -37,7 +37,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(R.layout.card_scanner_camera_activity)
 
     cameraExecutor = Executors.newSingleThreadExecutor()
 
