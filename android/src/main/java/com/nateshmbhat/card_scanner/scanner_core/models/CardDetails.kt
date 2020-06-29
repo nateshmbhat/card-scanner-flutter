@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 //@author nateshmbhat created on 27,June,2020
 
-class CardDetails(
+data class CardDetails(
         private var cardNumber: String,
         private var cardIssuer: String = "",
         private var cardHolderName: String = "",
