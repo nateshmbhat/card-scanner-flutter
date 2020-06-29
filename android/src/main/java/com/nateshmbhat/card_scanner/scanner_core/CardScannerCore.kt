@@ -12,7 +12,7 @@ class CardScannerCore(private val textItem: Text) {
 
     val cardNumberBlockPosition = CardNumberScanUtil.getTextBlockContainingCardNumber(textItem)
             ?: return null
-    val validFromAndExpiryDates = ExpiryScanUtil.extractValidityDates(textItem, cardNumberBlockPosition)
+//    val validFromAndExpiryDates = ExpiryScanUtil.extractValidityDates(textItem, cardNumberBlockPosition)
     return CardDetails(cardNumber = cardNumber)
   }
 }
@@ -20,9 +20,10 @@ class CardScannerCore(private val textItem: Text) {
 
 class ExpiryScanUtil {
   companion object {
-    fun extractValidityDates(textItem: Text, cardNumberBlockPosition: Int) {
-
-    }
+    private val cardNumberRegex: Regex = Regex("^\\s*(\\d{2}/\\d{2})\\s*$", RegexOption.MULTILINE)
+//    fun extractValidityDates(textItem: Text, cardNumberBlockPosition: Int) : Pair<String,String> {
+//
+//    }
   }
 }
 
