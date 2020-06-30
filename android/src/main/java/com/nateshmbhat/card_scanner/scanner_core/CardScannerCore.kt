@@ -1,63 +1,46 @@
 package com.nateshmbhat.card_scanner.scanner_core
 
-import android.util.Log
 import com.google.mlkit.vision.text.Text
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions
+import com.nateshmbhat.card_scanner.scanner_core.scan_utils.CardHolderNameScanUtil
+import com.nateshmbhat.card_scanner.scanner_core.scan_utils.CardIssuerScanUtil
+import com.nateshmbhat.card_scanner.scanner_core.scan_utils.CardNumberScanUtil
+import com.nateshmbhat.card_scanner.scanner_core.scan_utils.ExpiryScanUtil
 
 //@author nateshmbhat created on 27,June,2020
 
-class CardScannerCore(private val textItem: Text) {
-  private val cardNumberRegex: Regex = Regex("^(\\s*\\d\\s*){15,16}$", RegexOption.MULTILINE)
-  private lateinit var cardDetails: CardDetails
+class CardScannerCore(private val textItem: Text, private val scanOptions: CardScanOptions) {
+  fun scanCard(finalCardDetails: CardDetails?): CardDetails? {
+    val cardNumber = CardNumberScanUtil.verifyAndExtractCardNumber(textItem) ?: return null
 
-  public fun scanCard(): CardDetails? {
-    if (!isCardNumberInText(textItem.text)) {
-      return null
-    }
-    val cardNumber: String? = extractCardNumber(textItem.textBlocks);
-    cardNumber ?: return null
-    val cleanedCardNumber = cleanRawCardNumber(cardNumber)
+    val cardNumberBlockPosition = CardNumberScanUtil.getTextBlockContainingCardNumber(textItem)
+            ?: return null
 
-    if (!checkLuhnAlgorithm(cleanedCardNumber)) {
-      Log.d(TAG, "scanCard: card : $cardNumber , Luhn FAILED ");
-      return null
-    }
-    cardDetails = CardDetails(cardNumber = cleanedCardNumber)
-    return cardDetails
-  }
+    var expiryDate: ExpiryScanUtil.Companion.CardDateItem = ExpiryScanUtil.Companion.CardDateItem("", -1)
+    var cardHolderName: String = ""
+    var cardIssuer = ""
 
-  private fun extractCardNumber(textBlocks: List<Text.TextBlock>): String? {
-    for (block in textBlocks) {
-      val cardNumber = cardNumberRegex.find(block.text)?.value
-      if (cardNumber != null) return cardNumber
-    }
-    return null
-  }
-
-  private fun isCardNumberInText(text: String): Boolean {
-    return cardNumberRegex.containsMatchIn(text)
-  }
-
-  ///trims and removes all intermediate spaces for the card number
-  private fun cleanRawCardNumber(cardNumber: String): String {
-    return cardNumber.trim().replace(Regex("\\s+"), "")
-  }
-
-  ///Expects the result of [cleanRawCardNumber] to be passed here
-  private fun checkLuhnAlgorithm(cleanedCardNumber: String): Boolean {
-    val digitList = cleanedCardNumber.reversed().mapIndexed { index, digit ->
-      var num = "$digit".toInt()
-      if (index % 2 == 1) {
-        num = (num * 2)
-        num = if (num == 0) num else if (num % 9 == 0) 9 else num % 9
-      }
-      num
+    if (scanOptions.scanExpiryDate && finalCardDetails?.expiryDate?.isBlank() ?: true) {
+      expiryDate = ExpiryScanUtil.extractValidityDates(textItem, cardNumberBlockPosition)
     }
 
-    return (digitList.sum()) % 10 == 0
-  }
+    if (scanOptions.scanCardHolderName && (finalCardDetails?.cardHolderName?.isBlank() ?: true)) {
+      cardHolderName = CardHolderNameScanUtil.extractCardHolderName(
+              textItem,
+              cardNumberBlockPosition,
+              expiryDate.dateBlockPosition
+      )
+    }
 
-  companion object {
-    private const val TAG = "CardScannerCore"
+    if (scanOptions.scanCardIssuer && (finalCardDetails?.cardIssuer?.isEmpty() ?: true)) {
+      cardIssuer = CardIssuerScanUtil.extractCardIssuer(textItem, cardNumberBlockPosition)
+    }
+
+    return CardDetails(cardNumber = cardNumber, expiryDate = expiryDate.expiryDate,
+            cardHolderName = cardHolderName, cardIssuer = cardIssuer
+    )
   }
 }
+
+

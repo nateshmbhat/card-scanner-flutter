@@ -5,15 +5,13 @@ import android.os.Parcelable
 
 //@author nateshmbhat created on 27,June,2020
 
-class CardDetails(
-        private var cardNumber: String,
-        private var cardIssuer: String = "",
-        private var cardHolderName: String = "",
-        private var validFromDate: String = "",
-        private var expiryDate: String = "") : Parcelable {
+data class CardDetails(
+        val cardNumber: String,
+        val cardIssuer: String = "",
+        val cardHolderName: String = "",
+        val expiryDate: String = "") : Parcelable {
 
   constructor(parcel: Parcel) : this(
-          parcel.readString(),
           parcel.readString(),
           parcel.readString(),
           parcel.readString(),
@@ -25,16 +23,15 @@ class CardDetails(
     map.put("cardNumber", cardNumber)
     map.put("cardIssuer", cardIssuer)
     map.put("cardHolderName", cardHolderName)
-    map.put("validFromDate", validFromDate)
     map.put("expiryDate", expiryDate)
     return map.toMap()
   }
+
 
   override fun writeToParcel(parcel: Parcel, flags: Int) {
     parcel.writeString(cardNumber)
     parcel.writeString(cardIssuer)
     parcel.writeString(cardHolderName)
-    parcel.writeString(validFromDate)
     parcel.writeString(expiryDate)
   }
 

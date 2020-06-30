@@ -20,6 +20,7 @@ import android.app.Activity
 
 import android.content.Intent
 import com.nateshmbhat.card_scanner.scanner_core.TextRecognitionProcessor
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions
 
 typealias onCardScanned = (cardDetails: CardDetails) -> Unit
 
@@ -33,11 +34,13 @@ class CardScannerCameraActivity : AppCompatActivity() {
   private var cameraSelector: CameraSelector? = null
   private var textRecognizer: TextRecognizer? = null
   private var analysisUseCase: ImageAnalysis? = null
+  private lateinit var cardScanOptions :CardScanOptions
   private lateinit var cameraExecutor: ExecutorService
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(R.layout.card_scanner_camera_activity)
+    cardScanOptions = intent.getParcelableExtra<CardScanOptions>(CARD_SCAN_OPTIONS)
 
     cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -112,7 +115,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
     val analysisUseCase = ImageAnalysis.Builder().build()
             .also {
-              it.setAnalyzer(cameraExecutor, TextRecognitionProcessor { cardDetails ->
+              it.setAnalyzer(cameraExecutor, TextRecognitionProcessor (cardScanOptions) { cardDetails ->
                 Log.d(TAG, "Card recognized : $cardDetails")
                 val returnIntent: Intent = Intent()
                 returnIntent.putExtra(SCAN_RESULT, cardDetails)
@@ -127,8 +130,8 @@ class CardScannerCameraActivity : AppCompatActivity() {
     private const val TAG = "CameraXBasic"
     private const val REQUEST_CODE_PERMISSIONS = 10
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-    @JvmField
-    val SCAN_RESULT : String = "scan_result"
+    const val SCAN_RESULT : String = "scan_result"
+    const val CARD_SCAN_OPTIONS = "card_scan_options"
   }
 
   override fun onResume() {
@@ -144,5 +147,10 @@ class CardScannerCameraActivity : AppCompatActivity() {
   override fun onDestroy() {
     super.onDestroy()
     textRecognizer?.close()
+  }
+
+  override fun onBackPressed() {
+    setResult(Activity.RESULT_CANCELED)
+    super.onBackPressed()
   }
 }

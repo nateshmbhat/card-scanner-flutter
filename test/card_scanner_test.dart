@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:card_scanner/card_scanner.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('card_scanner');
+  const MethodChannel channel = MethodChannel('nateshmbhat/card_scanner');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,6 +17,5 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-  });
+  test('scan_card', () async {});
 }
