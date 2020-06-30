@@ -7,9 +7,6 @@ class CardNumberScanUtil {
   companion object {
     private val cardNumberRegex: Regex = Regex("^(\\s*\\d\\s*){15,16}$", RegexOption.MULTILINE)
     private const val TAG = "scanCard"
-    private fun extractCardNumber(block: Text.TextBlock): String? {
-      return cardNumberRegex.find(block.text)?.value
-    }
 
     ///returns cleaned card number if it passes Luhn algorithm else null
     public fun verifyAndExtractCardNumber(textItem: Text): String? {
@@ -28,6 +25,9 @@ class CardNumberScanUtil {
       return cleanedCardNumber
     }
 
+    private fun extractCardNumber(block: Text.TextBlock): String? {
+      return cardNumberRegex.find(block.text)?.value
+    }
 
     ///trims and removes all intermediate spaces for the card number
     private fun cleanRawCardNumber(cardNumber: String): String {

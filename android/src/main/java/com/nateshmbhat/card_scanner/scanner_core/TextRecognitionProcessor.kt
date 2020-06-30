@@ -10,16 +10,40 @@ import com.nateshmbhat.card_scanner.onCardScanned
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
 
 
-class TextRecognitionProcessor(private val listener: onCardScanned) : ImageAnalysis.Analyzer {
+class TextRecognitionProcessor(private val onCardScanned: onCardScanned) : ImageAnalysis.Analyzer {
   companion object {
     private val TAG: String = "TextRecognitionProcess"
+
     ///Indicates the number of times scan result is dropped even after successful card number scan.
     ///This increases the chance of detecting correct text since the camera would have become stabilized after some time
-    private const val NUMBER_OF_SCAN_SKIPS  = 3
+    private const val MIN_NUMBER_OF_SCANS = 3
+    private const val NUMBER_OF_SCAN_DROPS = 1
   }
 
-  private val cardDetailsSet: Set<CardDetails> = emptySet()
-  private var scansSkipped = 0 
+  private var numberOfValidScans = 0
+  private var finalCardDetails: CardDetails? = null
+
+  private fun updateCardDetails(newCardDetails: CardDetails) {
+    if (this.finalCardDetails == null) {
+      this.finalCardDetails = newCardDetails
+      return
+    }
+
+    this.finalCardDetails = this.finalCardDetails!!.copy(
+            expiryDate = (if (finalCardDetails!!.expiryDate.isEmpty()) {
+              newCardDetails.expiryDate
+            } else finalCardDetails!!.expiryDate),
+            cardHolderName = (if (finalCardDetails!!.cardHolderName.isEmpty()) {
+              newCardDetails.cardHolderName
+            } else finalCardDetails!!.cardHolderName),
+            cardIssuer = (if (finalCardDetails!!.cardIssuer.isEmpty()) {
+              newCardDetails.cardIssuer
+            } else finalCardDetails!!.cardIssuer),
+            validFromDate = (if (finalCardDetails!!.validFromDate.isEmpty()) {
+              newCardDetails.validFromDate
+            } else finalCardDetails!!.validFromDate)
+    )
+  }
 
   @SuppressLint("UnsafeExperimentalUsageError")
   override fun analyze(imageProxy: ImageProxy) {
@@ -31,16 +55,23 @@ class TextRecognitionProcessor(private val listener: onCardScanned) : ImageAnaly
 
       val result = recognizer.process(image)
               .addOnSuccessListener { visionText ->
-                for(block in visionText.textBlocks){
-                  Log.d(TAG, "analyse , visionText : ${block.text}")
+                for (block in visionText.textBlocks) {
+                  Log.d(TAG, "visionText: TextBlock ============================")
+                  Log.d(TAG, "visionText : ${block.text}")
                 }
                 val cardScanner = CardScannerCore(visionText);
-                val cardDetails = cardScanner.scanCard() ?: return@addOnSuccessListener
-                if(this.scansSkipped<NUMBER_OF_SCAN_SKIPS){
-                  this.scansSkipped++
+                val cardDetails = cardScanner.scanCard(finalCardDetails) ?: return@addOnSuccessListener
+
+                this.numberOfValidScans++
+                if (this.numberOfValidScans <= NUMBER_OF_SCAN_DROPS) {
                   return@addOnSuccessListener
                 }
-                listener(cardDetails)
+
+                if (this.numberOfValidScans < MIN_NUMBER_OF_SCANS) {
+                  updateCardDetails(cardDetails)
+                  return@addOnSuccessListener
+                }
+                onCardScanned(finalCardDetails ?: cardDetails)
               }
               .addOnFailureListener { e ->
                 Log.e(TAG, "Error : $e")

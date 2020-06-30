@@ -6,11 +6,11 @@ import android.os.Parcelable
 //@author nateshmbhat created on 27,June,2020
 
 data class CardDetails(
-        private var cardNumber: String,
-        private var cardIssuer: String = "",
-        private var cardHolderName: String = "",
-        private var validFromDate: String = "",
-        private var expiryDate: String = "") : Parcelable {
+        val cardNumber: String,
+        val cardIssuer: String = "",
+        val cardHolderName: String = "",
+        val validFromDate: String = "",
+        val expiryDate: String = "") : Parcelable {
 
   constructor(parcel: Parcel) : this(
           parcel.readString(),
