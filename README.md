@@ -17,7 +17,7 @@
 ## Features
 
 - 🔒Fully **OFFLINE** scan makes it a completely **secure scanner** !
-- 🎈 Can scan **Expiry date** , **Card Holder name** and **Card Issuer** along with the **Card number**✨ (lacked by other scanners)
+- 🎈 Can scan **Expiry date** , **Card Holder name** and **Card Issuer** (lacked by other scanners) along with the **Card number**✨
 - 🔋Powered by Google's Machine Learning models
 - ⚡ Great performance and accuracy
 - 🎚Supports controlling parameters that determine the balance between speed and accuracy
