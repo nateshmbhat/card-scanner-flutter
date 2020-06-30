@@ -25,12 +25,12 @@ class CardDetails {
 
   @override
   String toString() {
-    return ''' 
-    cardNumber = "$cardNumber"
-    cardIssuer = "$cardIssuer"
-    cardHolderName = "$cardHolderName"
-    expiryDate = "$expiryDate"
-    ''';
+    var string = '';
+    string += _cardNumber.isEmpty ? "" : 'Card Number = $cardNumber\n';
+    string += _expiryDate.isEmpty ? "" : 'Expiry Date = $expiryDate\n';
+    string += _cardIssuer.isEmpty ? "" : 'Card Issuer = $cardIssuer\n';
+    string += _cardHolderName.isEmpty ? "" : 'Card Holder Name = $cardHolderName\n';
+    return string;
   }
 
   get cardIssuer => _cardIssuer;

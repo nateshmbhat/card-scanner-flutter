@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: Text('scan card'),
               ),
-              Text('Card Details : $_cardDetails')
+              Text('$_cardDetails')
             ],
           ),
         ),

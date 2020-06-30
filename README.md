@@ -27,3 +27,28 @@
 
 
 ## Install
+
+Add this to your package's pubspec.yaml file:
+
+```yaml
+dependencies:
+  card_scanner: <latest-version>
+```
+
+## Usage
+Just import the package and call `scanCard`
+
+```dart
+import 'package:card_scanner/card_scanner.dart';
+var cardDetails = await CardScanner.scanCard()
+
+print(cardDetails)
+```
+Output : 
+```
+cardNumber = 
+```
+
+The above code opens the device camera , looks for a valid card and gets the required details and returns the `CardDetails` object
+
+
