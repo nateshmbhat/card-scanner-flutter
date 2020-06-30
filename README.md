@@ -75,3 +75,8 @@ Card Holder Name = PAUL SAMUELSON
 ```
 
 ---
+
+### What next ? 
++ IOS support coming very soon 🚀
++ More control options for scanning behavior
++ Better optimizations for name scanning is in the todo list :)
