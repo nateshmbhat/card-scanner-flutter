@@ -39,4 +39,3 @@ class CardDetails {
 
   get expiryDate => _expiryDate;
 }
- 

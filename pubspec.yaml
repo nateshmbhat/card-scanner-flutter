@@ -1,8 +1,10 @@
 name: card_scanner
 description: A new Flutter plugin.
 version: 0.0.1
-author:
-homepage:
+authors:
+  - nateshmbhat
+homepage: https://github.com/nateshmbhat/card-scanner-flutter
+repository: https://github.com/nateshmbhat/card-scanner-flutter
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

@@ -5,7 +5,10 @@ class CardScanOptions {
   final scanCardHolderName;
   final scanCardIssuer;
 
-  CardScanOptions({this.scanExpiryDate = true, this.scanCardHolderName = false, this.scanCardIssuer = false});
+  CardScanOptions(
+      {this.scanExpiryDate = true,
+      this.scanCardHolderName = false,
+      this.scanCardIssuer = false});
 
   Map<String, String> toMap() {
     Map<String, String> map = {};
