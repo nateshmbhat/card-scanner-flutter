@@ -14,20 +14,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<String, String> _cardDetails;
+  CardDetails _cardDetails;
 
   @override
   void initState() {
-    CardScanner.init();
     super.initState();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanCard() async {
-    Map<String, String> cardDetails = {};
+    CardDetails cardDetails;
     try {
-      cardDetails = await CardScanner.scanCard();
-    } on PlatformException catch(e) {
+      cardDetails =
+          await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true, scanCardIssuer: true));
+    } on PlatformException catch (e) {
       print('Failed to get platform version : $e');
       return;
     }

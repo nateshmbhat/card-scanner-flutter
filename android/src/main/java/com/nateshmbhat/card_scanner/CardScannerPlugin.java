@@ -8,6 +8,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails;
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,10 +75,18 @@ public class CardScannerPlugin implements FlutterPlugin, MethodCallHandler, Acti
                 return;
             }
             pendingResult = result;
-            activity.startActivityForResult(new Intent(context, CardScannerCameraActivity.class), SCAN_REQUEST_CODE);
+            showCameraActivity(call);
         } else {
             result.notImplemented();
         }
+    }
+
+    void showCameraActivity(MethodCall call) {
+        Map<String, String> map = (Map<String, String>) call.arguments;
+        CardScanOptions cardScanOptions = new CardScanOptions(map);
+        Intent intent = new Intent(context, CardScannerCameraActivity.class);
+        intent.putExtra(CardScannerCameraActivity.CARD_SCAN_OPTIONS, cardScanOptions);
+        activity.startActivityForResult(intent, SCAN_REQUEST_CODE);
     }
 
     @Override
@@ -92,6 +101,9 @@ public class CardScannerPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
             pendingResult = null;
             return true;
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            pendingResult.success(null);
+            pendingResult = null;
         }
         return false;
     }

@@ -9,11 +9,9 @@ data class CardDetails(
         val cardNumber: String,
         val cardIssuer: String = "",
         val cardHolderName: String = "",
-        val validFromDate: String = "",
         val expiryDate: String = "") : Parcelable {
 
   constructor(parcel: Parcel) : this(
-          parcel.readString(),
           parcel.readString(),
           parcel.readString(),
           parcel.readString(),
@@ -25,16 +23,15 @@ data class CardDetails(
     map.put("cardNumber", cardNumber)
     map.put("cardIssuer", cardIssuer)
     map.put("cardHolderName", cardHolderName)
-    map.put("validFromDate", validFromDate)
     map.put("expiryDate", expiryDate)
     return map.toMap()
   }
+
 
   override fun writeToParcel(parcel: Parcel, flags: Int) {
     parcel.writeString(cardNumber)
     parcel.writeString(cardIssuer)
     parcel.writeString(cardHolderName)
-    parcel.writeString(validFromDate)
     parcel.writeString(expiryDate)
   }
 

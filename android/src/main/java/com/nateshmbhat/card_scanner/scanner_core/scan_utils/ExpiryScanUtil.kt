@@ -5,7 +5,7 @@ import kotlin.math.min
 
 class ExpiryScanUtil {
   companion object {
-    class CardDateItem(val validFrom: String, val validTill: String, val dateBlockPosition: Int) {}
+    class CardDateItem(val expiryDate: String, val dateBlockPosition: Int) {}
 
     private val dateRegex = "(0[1-9]|1[0-2])/([0-9]{2})"
     private val cardNumberRegex: Regex = Regex("\\b(($dateRegex)|($dateRegex.*?$dateRegex))\\s*$", RegexOption.MULTILINE)
@@ -21,18 +21,15 @@ class ExpiryScanUtil {
         val dateStrings = Regex(dateRegex).findAll(datesLine).map { match -> match.value.trim() }.toList()
         expiryBlockPosition = index
 
-        val validFrom: String
-        val validTill: String
-        if (dateStrings.size > 1) {
-          validFrom = dateStrings[0]
-          validTill = dateStrings[1]
+        val expiryDate: String
+        expiryDate = if (dateStrings.size > 1) {
+          dateStrings[1] // valid from date string case handled here
         } else {
-          validFrom = ""
-          validTill = dateStrings[0]
+          dateStrings[0]
         }
-        return CardDateItem(validFrom, validTill, expiryBlockPosition)
+        return CardDateItem(expiryDate, expiryBlockPosition)
       }
-      return CardDateItem("", "", -1)
+      return CardDateItem("", -1)
     }
   }
 }

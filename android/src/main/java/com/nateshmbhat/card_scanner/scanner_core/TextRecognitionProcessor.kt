@@ -8,15 +8,16 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.nateshmbhat.card_scanner.onCardScanned
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions
 
 
-class TextRecognitionProcessor(private val onCardScanned: onCardScanned) : ImageAnalysis.Analyzer {
+class TextRecognitionProcessor(private val scanOptions: CardScanOptions, private val onCardScanned: onCardScanned) : ImageAnalysis.Analyzer {
   companion object {
     private val TAG: String = "TextRecognitionProcess"
 
     ///Indicates the number of times scan result is dropped even after successful card number scan.
     ///This increases the chance of detecting correct text since the camera would have become stabilized after some time
-    private const val MIN_NUMBER_OF_SCANS = 3
+    private const val MIN_NUMBER_OF_SCANS = 8
     private const val NUMBER_OF_SCAN_DROPS = 1
   }
 
@@ -38,10 +39,7 @@ class TextRecognitionProcessor(private val onCardScanned: onCardScanned) : Image
             } else finalCardDetails!!.cardHolderName),
             cardIssuer = (if (finalCardDetails!!.cardIssuer.isEmpty()) {
               newCardDetails.cardIssuer
-            } else finalCardDetails!!.cardIssuer),
-            validFromDate = (if (finalCardDetails!!.validFromDate.isEmpty()) {
-              newCardDetails.validFromDate
-            } else finalCardDetails!!.validFromDate)
+            } else finalCardDetails!!.cardIssuer)
     )
   }
 
@@ -59,8 +57,9 @@ class TextRecognitionProcessor(private val onCardScanned: onCardScanned) : Image
                   Log.d(TAG, "visionText: TextBlock ============================")
                   Log.d(TAG, "visionText : ${block.text}")
                 }
-                val cardScanner = CardScannerCore(visionText);
-                val cardDetails = cardScanner.scanCard(finalCardDetails) ?: return@addOnSuccessListener
+                val cardScanner = CardScannerCore(visionText, scanOptions);
+                val cardDetails = cardScanner.scanCard(finalCardDetails)
+                        ?: return@addOnSuccessListener
 
                 this.numberOfValidScans++
                 if (this.numberOfValidScans <= NUMBER_OF_SCAN_DROPS) {
