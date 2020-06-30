@@ -9,7 +9,7 @@ import kotlin.math.min
 class CardHolderNameScanUtil {
   companion object {
     private val holderNameRegex = Regex("^ *(([A-Z.]+ {0,2}){1,6}) *$", RegexOption.MULTILINE)
-    private val blackListedWords = arrayOf("valid", "through", "thru", "valid thru", "valid through", "from", "valid from", "international", "rupay", "debit", "platinum", "axis", "sbi", "axis bank" , "credit","card","titanium","bank","global" , "state bank" , "of" , "the", "india" , "valid only" , "classic"
+    private val blackListedWords = setOf<String>("valid", "through", "thru", "valid thru", "valid through", "from", "valid from", "international", "rupay", "debit", "platinum", "axis", "sbi", "axis bank", "credit", "card", "titanium", "bank", "global", "state bank", "of", "the", "india", "valid only", "classic", "gold", "sbi card", "visa classic", "visa signature", "visa gold", "electronic", "use only", "electronic use only", "only","use"
     )
 
     fun extractCardHolderName(text: Text, cardNumberBlockPosition: Int, cardExpiryDateBlockPosition: Int): String {

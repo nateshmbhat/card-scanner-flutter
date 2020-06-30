@@ -7,9 +7,9 @@ import kotlin.math.min
 //@author nateshmbhat created on 29,June,2020
 class CardIssuerScanUtil {
   companion object {
-    public val ISSUER_LIST: Array<String> = arrayOf("visa", "mastercard", "jcb", "diners club", "american express",
+    val ISSUER_LIST = setOf("visa", "mastercard", "jcb", "diners club", "american express",
             "discover")
-    private val issuersRegex = Regex("\\b(visa|mastercard|jcb|diners club|american express|discover|master card)\\b", setOf(RegexOption.IGNORE_CASE,RegexOption.MULTILINE))
+    private val issuersRegex = Regex("^ *(visa|mastercard|jcb|diners club|american express|discover|master card) *", setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
 
     fun extractCardIssuer(visionText: Text, cardNumberBlockPosition: Int): String {
       val startPosition = max(cardNumberBlockPosition - 2, 0)
