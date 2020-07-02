@@ -13,8 +13,6 @@
 **card_scanner** is a flutter plugin for accurately and quickly scanning debit and credit cards.
 
 
-### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
-
 ## Features
 
 - 🔒Fully **OFFLINE** scan makes it a completely **secure scanner** !
@@ -23,6 +21,7 @@
 - ⚡ Great performance and accuracy
 - 🎚Supports controlling parameters that determine the balance between speed and accuracy
 - ❤️ Simple, powerful, & intuitive API 
+
 
 
 ## Install
@@ -34,6 +33,7 @@ dependencies:
   card_scanner: <latest-version>
 ```
 > get the [latest version number here](https://pub.dev/packages/card_scanner#-installing-tab-)
+
 
 ## Usage
 Just import the package and call `scanCard`
@@ -75,6 +75,8 @@ Expiry Date = 11/26
 Card Issuer = mastercard
 Card Holder Name = PAUL SAMUELSON
 ```
+
+### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
 
 ---
 
