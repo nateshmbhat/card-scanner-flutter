@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/nateshmbhat/card-scanner-flutter/master/.github/logo.png?sanitize=true" width="250px">
 </p>
-<h2 align="center">Fast , Accurate and Secure Credit & Debit card scanner </h2>
+<h2 align="center">Fast , Accurate and Secure Credit & Debit card scanner for Flutter </h2>
 
 [![](https://img.shields.io/pub/v/card_scanner)](https://pub.dev/packages/card_scanner)
 [![](https://img.shields.io/badge/package-flutter-blue)](https://github.com/nateshmbhat/card-scanner-flutter)
