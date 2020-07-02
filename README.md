@@ -33,6 +33,7 @@ Add this to your package's pubspec.yaml file:
 dependencies:
   card_scanner: <latest-version>
 ```
+> get the [latest version number here](https://pub.dev/packages/card_scanner#-installing-tab-)
 
 ## Usage
 Just import the package and call `scanCard`
