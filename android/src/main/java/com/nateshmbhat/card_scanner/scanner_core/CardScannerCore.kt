@@ -22,7 +22,7 @@ class CardScannerCore(private val textItem: Text, private val scanOptions: CardS
     var cardIssuer = ""
 
     if (scanOptions.scanExpiryDate && finalCardDetails?.expiryDate?.isBlank() ?: true) {
-      expiryDate = ExpiryScanUtil.extractValidityDates(textItem, cardNumberBlockPosition)
+      expiryDate = ExpiryScanUtil.extractExpiryDate(textItem, cardNumberBlockPosition)
     }
 
     if (scanOptions.scanCardHolderName && (finalCardDetails?.cardHolderName?.isBlank() ?: true)) {
@@ -33,9 +33,9 @@ class CardScannerCore(private val textItem: Text, private val scanOptions: CardS
       )
     }
 
-    if (scanOptions.scanCardIssuer && (finalCardDetails?.cardIssuer?.isEmpty() ?: true)) {
-      cardIssuer = CardIssuerScanUtil.extractCardIssuer(textItem, cardNumberBlockPosition)
-    }
+//    if (scanOptions.scanCardIssuer && (finalCardDetails?.cardIssuer?.isEmpty() ?: true)) {
+//      cardIssuer = CardIssuerScanUtil.extractCardIssuer(textItem, cardNumberBlockPosition)
+//    }
 
     return CardDetails(cardNumber = cardNumber, expiryDate = expiryDate.expiryDate,
             cardHolderName = cardHolderName, cardIssuer = cardIssuer

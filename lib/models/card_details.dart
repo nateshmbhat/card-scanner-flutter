@@ -12,7 +12,7 @@ class CardDetails {
 
   CardDetails.fromMap(Map<String, String> map) {
     _cardNumber = map['cardNumber'];
-    _cardIssuer = map['cardIssuer'].isNotEmpty ? map['cardIssuer'] : CardUtils().getCardIssuer(_cardNumber);
+    _cardIssuer = map['cardIssuer'].isNotEmpty ? map['cardIssuer'] : CardUtils().getCardIssuer(_cardNumber).toString();
     _cardHolderName = map['cardHolderName'];
     _expiryDate = map['expiryDate'];
   }
