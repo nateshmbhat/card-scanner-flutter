@@ -1,5 +1,7 @@
 // @author nateshmbhat created on 30,June,2020
 
+import 'package:card_scanner/utils.dart';
+
 class CardDetails {
   var _cardNumber = "";
   var _cardIssuer = "";
@@ -10,7 +12,7 @@ class CardDetails {
 
   CardDetails.fromMap(Map<String, String> map) {
     _cardNumber = map['cardNumber'];
-    _cardIssuer = map['cardIssuer'];
+    _cardIssuer = map['cardIssuer'].isNotEmpty ? map['cardIssuer'] : CardUtils().getCardIssuer(_cardNumber);
     _cardHolderName = map['cardHolderName'];
     _expiryDate = map['expiryDate'];
   }
