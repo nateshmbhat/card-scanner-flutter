@@ -17,14 +17,14 @@ data class CardScanOptions(val scanExpiryDate: Boolean,
   }
 
   constructor(configMap: Map<String, String>) : this(
-          scanExpiryDate = configMap["scanCardExpiryDate"]?.toBoolean() ?: true,
+          scanExpiryDate = configMap["scanExpiryDate"]?.toBoolean() ?: true,
           scanCardHolderName = configMap["scanCardHolderName"]?.toBoolean() ?: false,
           scanCardIssuer = configMap["scanCardIssuer"]?.toBoolean() ?: false
   )
 
   fun toMap(): Map<String, String> {
     return mapOf(
-            Pair("scanCardExpiryDate", scanExpiryDate.toString()),
+            Pair("scanExpiryDate", scanExpiryDate.toString()),
             Pair("scanCardHolderName", scanCardHolderName.toString()),
             Pair("scanCardIssuer", scanCardIssuer.toString())
     )
