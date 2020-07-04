@@ -41,7 +41,22 @@ class TextRecognitionProcessor(private val scanOptions: CardScanOptions, private
               newCardDetails.cardIssuer
             } else finalCardDetails!!.cardIssuer)
     )
+    if (areAllDetailsScanned()) {
+      Log.d(TAG, "updateCardDetails:  ALL DETAILS SCANNED ! : Number of scans = $numberOfValidScans");
+      onCardScanned(finalCardDetails!!);
+    }
   }
+
+  private fun areAllDetailsScanned(): Boolean {
+    if (
+            (scanOptions.scanExpiryDate && finalCardDetails?.expiryDate?.isBlank() != false) ||
+            (scanOptions.scanCardHolderName && finalCardDetails?.cardHolderName?.isBlank() != false)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
 
   @SuppressLint("UnsafeExperimentalUsageError")
   override fun analyze(imageProxy: ImageProxy) {

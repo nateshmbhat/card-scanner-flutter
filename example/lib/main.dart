@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     CardDetails cardDetails;
     try {
       cardDetails =
-          await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: false, scanCardIssuer: true,scanExpiryDate: false));
+          await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true, scanCardIssuer: true));
     } on PlatformException catch (e) {
       print('Failed to get platform version : $e');
       return;
