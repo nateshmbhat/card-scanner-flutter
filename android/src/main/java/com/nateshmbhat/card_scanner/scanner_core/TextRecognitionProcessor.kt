@@ -31,17 +31,32 @@ class TextRecognitionProcessor(private val scanOptions: CardScanOptions, private
     }
 
     this.finalCardDetails = this.finalCardDetails!!.copy(
-            expiryDate = (if (finalCardDetails!!.expiryDate.isEmpty()) {
+            expiryDate = (if (finalCardDetails!!.expiryDate.isBlank()) {
               newCardDetails.expiryDate
             } else finalCardDetails!!.expiryDate),
-            cardHolderName = (if (finalCardDetails!!.cardHolderName.isEmpty()) {
+            cardHolderName = (if (finalCardDetails!!.cardHolderName.isBlank()) {
               newCardDetails.cardHolderName
             } else finalCardDetails!!.cardHolderName),
-            cardIssuer = (if (finalCardDetails!!.cardIssuer.isEmpty()) {
+            cardIssuer = (if (finalCardDetails!!.cardIssuer.isBlank()) {
               newCardDetails.cardIssuer
             } else finalCardDetails!!.cardIssuer)
     )
+    if (areAllDetailsScanned()) {
+      Log.d(TAG, "updateCardDetails:  ALL DETAILS SCANNED ! : Number of scans = $numberOfValidScans");
+      onCardScanned(finalCardDetails!!);
+    }
   }
+
+  private fun areAllDetailsScanned(): Boolean {
+    if (
+            (scanOptions.scanExpiryDate && finalCardDetails?.expiryDate?.isBlank() != false) ||
+            (scanOptions.scanCardHolderName && finalCardDetails?.cardHolderName?.isBlank() != false)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
 
   @SuppressLint("UnsafeExperimentalUsageError")
   override fun analyze(imageProxy: ImageProxy) {

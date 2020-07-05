@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 export 'package:card_scanner/models/card_details.dart';
 export 'package:card_scanner/models/card_scan_options.dart';
+export 'package:card_scanner/models/card_issuer.dart';
 
 class CardScanner {
   static const MethodChannel _channel =

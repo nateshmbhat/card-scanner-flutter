@@ -1,6 +1,7 @@
-# 💳 card_scanner
-
-<h2 align="center">Fast , Accurate and Secure Credit & Debit card scanner </h2>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nateshmbhat/card-scanner-flutter/master/.github/logo.png?sanitize=true" width="250px">
+</p>
+<h2 align="center">Fast, Accurate and Secure Credit & Debit card scanner for Flutter </h2>
 
 [![](https://img.shields.io/pub/v/card_scanner)](https://pub.dev/packages/card_scanner)
 [![](https://img.shields.io/badge/package-flutter-blue)](https://github.com/nateshmbhat/card-scanner-flutter)
@@ -12,8 +13,6 @@
 **card_scanner** is a flutter plugin for accurately and quickly scanning debit and credit cards.
 
 
-### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
-
 ## Features
 
 - 🔒Fully **OFFLINE** scan makes it a completely **secure scanner** !
@@ -24,6 +23,7 @@
 - ❤️ Simple, powerful, & intuitive API 
 
 
+
 ## Install
 
 Add this to your package's pubspec.yaml file:
@@ -32,6 +32,8 @@ Add this to your package's pubspec.yaml file:
 dependencies:
   card_scanner: <latest-version>
 ```
+> get the [latest version number here](https://pub.dev/packages/card_scanner#-installing-tab-)
+
 
 ## Usage
 Just import the package and call `scanCard`
@@ -73,6 +75,8 @@ Expiry Date = 11/26
 Card Issuer = mastercard
 Card Holder Name = PAUL SAMUELSON
 ```
+
+### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
 
 ---
 
