@@ -13,7 +13,7 @@ class CardHolderNameScanUtil {
             "axis", "sbi", "axis bank", "credit", "card", "titanium", "bank", "global", "state bank", "of", "the", "india", "valid only", "classic", "gold", "sbi card",
             "visa classic", "visa signature", "visa gold", "electronic", "use only", "electronic use only", "only", "use"
             , "expires", "end", "expires end", "valid till", "expire date", "date", "expiry", "expiry date", "premier",
-            "world", "uk", "hsbc", "amex"
+            "world", "uk", "hsbc", "amex", "valid from valid thru", "valid from valid till", "member since"
     )
 
     fun extractCardHolderName(visionText: Text, cardNumberBlockPosition: Int, cardExpiryDateBlockPosition: Int): String {
@@ -29,7 +29,10 @@ class CardHolderNameScanUtil {
     private fun isValidName(cardHolder: String): Boolean {
       if (cardHolder.length < 3) return false;
       if (CardIssuerScanUtil.ISSUER_LIST.contains(cardHolder.toLowerCase(Locale.getDefault()))) return false
-      return !blackListedWords.contains(cardHolder.toLowerCase(Locale.getDefault()))
+      if (cardHolder.startsWith("valid from", ignoreCase = true) || cardHolder.startsWith("valid thru", ignoreCase = true)) return false;
+      if (cardHolder.endsWith("valid from", ignoreCase = true) || cardHolder.endsWith("valid thru", ignoreCase = true)) return false;
+      if (blackListedWords.contains(cardHolder.toLowerCase(Locale.getDefault()))) return false;
+      return true;
     }
   }
 }
