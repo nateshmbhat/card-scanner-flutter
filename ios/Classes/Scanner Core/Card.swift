@@ -31,7 +31,8 @@ public class Card: CustomStringConvertible {
         return [
             "cardNumber": number,
             "cardHolderName": name,
-            "expiryDate": expiryDate
+            "expiryDate": expiryDate,
+            "cardIssuer": ""
         ]
     }
 }

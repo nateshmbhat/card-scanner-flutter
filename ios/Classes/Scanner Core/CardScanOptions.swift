@@ -9,23 +9,23 @@
 import Foundation
 
 public class CardScanOptions {
-    var scanCardHolderName: Bool
-    var scanExpiryDate: Bool
-
+    var scanCardHolderName: Bool = false
+    var scanExpirtyDate: Bool = false
+    
     init(scanCardHolderName: Bool = false, scanExpiryDate: Bool = false) {
         self.scanCardHolderName = scanCardHolderName
-        self.scanExpiryDate = scanExpiryDate
+        self.scanExpirtyDate = scanExpiryDate
     }
-
-    init(from dictionary: [String: Any]) {
-         self.scanCardHolderName = (dictionary["scanCardHolderName"] as? Bool) ?? false
-         self.scanExpiryDate = (dictionary["scanExpiryDate"] as? Bool) ?? false
-    }
-
-    var dictionary: [String: Bool] {
-        return [
-            "scanCardHolderName": scanCardHolderName,
-            "scanExpiryDate": scanExpiryDate,
-        ]
+    
+    init(from dictionary: [String: String]?) {
+        if let options = dictionary {
+            if let scanCardHolderName = options["scanCardHolderName"] {
+                self.scanCardHolderName = (scanCardHolderName == "true")
+            }
+            
+            if let scanExpirtyDate = options["scanExpiryDate"] {
+                self.scanExpirtyDate = (scanExpirtyDate == "true")
+            }
+        }
     }
 }

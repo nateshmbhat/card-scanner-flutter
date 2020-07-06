@@ -10,11 +10,14 @@ public class SwiftCardScannerPlugin: NSObject, FlutterPlugin {
 
   var result: FlutterResult?
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterReply) {
+  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     if (call.method == "scan_card") {
-        let scanProcessor: ScanProcessor = ScanProcessor(cardScanOptions: CardScanOptions(from: (call.arguments as? [String: Any]) ?? [String: String]()))
+        let scanProcessor: ScanProcessor = ScanProcessor(withOptions: CardScanOptions(from: call.arguments as? [String: String]))
+        
         scanProcessor.scanProcessorDelegate = self
+        
         scanProcessor.startScanning()
+        
         self.result = result
     } else {
         result(FlutterMethodNotImplemented)
