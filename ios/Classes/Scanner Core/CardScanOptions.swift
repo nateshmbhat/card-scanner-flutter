@@ -10,11 +10,11 @@ import Foundation
 
 public class CardScanOptions {
     var scanCardHolderName: Bool = false
-    var scanExpirtyDate: Bool = false
+    var scanExpiryDate: Bool = false
     
     init(scanCardHolderName: Bool = false, scanExpiryDate: Bool = false) {
         self.scanCardHolderName = scanCardHolderName
-        self.scanExpirtyDate = scanExpiryDate
+        self.scanExpiryDate = scanExpiryDate
     }
     
     init(from dictionary: [String: String]?) {
@@ -24,7 +24,7 @@ public class CardScanOptions {
             }
             
             if let scanExpirtyDate = options["scanExpiryDate"] {
-                self.scanExpirtyDate = (scanExpirtyDate == "true")
+                self.scanExpiryDate = (scanExpirtyDate == "true")
             }
         }
     }

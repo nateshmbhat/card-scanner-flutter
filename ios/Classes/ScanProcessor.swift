@@ -15,7 +15,7 @@ public protocol ScanProcessorDelegate {
 
 public class ScanProcessor {
     var scanProcessorDelegate: ScanProcessorDelegate?
-    var card: Card = Card(number: "", name: "", expiryDate: "")
+    var card: Card = Card()
     
     var datesCollectedSoFar: [String] = []
     var validScansSoFar: Int = 0
@@ -41,23 +41,23 @@ extension ScanProcessor: CameraDelegate {
             return
         }
         
-        card.number = cardNumberBlock.text.replacingOccurrences(of: "\\s", with: "", options: [.regularExpression])
+        card.number = cardNumberBlock.text.replacingOccurrences(of: "\\s", with: "", options: [.regularExpression]).cleaned
         
         updateValidScansCount()
         
-        if cardScanOptions.scanCardHolderName == true{
+        if cardScanOptions.scanCardHolderName == true {
             if let cardHolderName: String = extractCardHolderName(from: scanResult, with: startingPointForFurtherExtractions) {
                 card.name = cardHolderName
             }
         }
         
-        if cardScanOptions.scanExpirtyDate == true {
+        if cardScanOptions.scanExpiryDate == true {
             if let expiryDate: String = extractExpiryDate(from: scanResult) {
                 card.expiryDate = expiryDate
             }
         }
         
-        if noMoreFurtherScanningIsRequired() {
+        if noMoreFurtherScanningRequired() {
             // Delegate back to Flutter from here
             cardScanned = true
             scanProcessorDelegate?.scanProcessor(self, didFinishScanning: card)
@@ -78,6 +78,7 @@ extension ScanProcessor: CameraDelegate {
 // MARK:- Utilities for extraction
 extension ScanProcessor {
     static let maxValidScansLimit: Int = 8
+    static let minValidScansRequired: Int = 3
     
     static let blackListedWords: [String] = ["valid", "through", "thru", "valid thru", "valid through", "from", "valid from", "international", "rupay", "debit", "platinum", "axis", "sbi", "axis bank", "credit", "card", "titanium", "bank", "global", "state bank", "of", "the", "india", "valid only", "classic", "gold", "sbi card", "visa classic", "visa signature", "visa gold", "electronic", "use only", "electronic use only", "only", "use", "visa", "a", "debit card", "credit card", "more benefits", "rak bank", "rakbank", "scan to discover", "customer care", "customer", "care", "match", "check", "check out", "manager", "gold", "uae", "india", "debit & prepaid", "ubi", "united bandk of india", "mastercard", "mastereo", "mastro", "signature", "corporate card", "corporate", "prepaid gift card", "gift", "gift plus", "prepaid", "we understand your world", "world", "understand", "valid only in india", "regalia", "easyshop", "millennia", "infinite", "cardholder", "Union Bank", "Good people to bank with", "valid thru valid from", "validthruvalid from", "valid thruvalid from", "valid from valid thru", "valid fromvalid thru", "valid thruvalid from"]
     
@@ -157,8 +158,12 @@ extension ScanProcessor {
         validScansSoFar += 1
     }
     
-    func noMoreFurtherScanningIsRequired() -> Bool {
-        return maxValidScansLimitReached() || enoughDetailsHaveBeenGathered()
+    func noMoreFurtherScanningRequired() -> Bool {
+        return maxValidScansLimitReached() || (minimumValidScansFulfilled() && enoughDetailsHaveBeenGathered())
+    }
+    
+    func minimumValidScansFulfilled() -> Bool {
+        return validScansSoFar >= ScanProcessor.minValidScansRequired
     }
     
     func maxValidScansLimitReached() -> Bool {
@@ -166,14 +171,14 @@ extension ScanProcessor {
     }
     
     func enoughDetailsHaveBeenGathered() -> Bool {
-        var cardHasEnoughDetails: Bool = card.number.isNotEmpty
+        var cardHasEnoughDetails: Bool = !card.number.isEmpty
         
         if (cardScanOptions.scanCardHolderName) {
-            cardHasEnoughDetails = cardHasEnoughDetails && card.name.isNotEmpty
+            cardHasEnoughDetails = cardHasEnoughDetails && !card.name.isEmpty
         }
         
-        if (cardScanOptions.scanExpirtyDate) {
-            cardHasEnoughDetails = cardHasEnoughDetails && card.expiryDate.isNotEmpty
+        if (cardScanOptions.scanExpiryDate) {
+            cardHasEnoughDetails = cardHasEnoughDetails && !card.expiryDate.isEmpty
         }
         
         return cardHasEnoughDetails
@@ -205,12 +210,21 @@ extension String {
         return luhn_sum % 10 == 0
     }
     
-    var isAValidName: Bool {
-        return !ScanProcessor.blackListedWords.contains(self.lowercased()) && self.count > 3
+    var cleaned: String {
+        guard
+            let cardNumberExtractionRegEx = try? NSRegularExpression(pattern: "[0-9]{15-16}"),
+            let match = cardNumberExtractionRegEx.firstMatch(in: self, range: NSRange(location: 0, length: self.utf16.count)) else {
+            return self
+        }
+        
+        return String(self[Range(match.range, in: self)!])
     }
     
-    var isNotEmpty: Bool {
-        return !self.isEmpty
+    var isAValidName: Bool {
+        if ScanProcessor.blackListedWords.contains(self.lowercased()) { return false }
+        if self.count < 3 { return false }
+        if self.contains("valid from") || self.contains("valid thru") { return false }
+        
+        return true
     }
 }
-

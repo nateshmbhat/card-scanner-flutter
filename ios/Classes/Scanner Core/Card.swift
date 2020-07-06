@@ -13,7 +13,7 @@ public class Card: CustomStringConvertible {
     var name: String
     var expiryDate: String
 
-    init(number: String, name: String, expiryDate: String) {
+    init(number: String = "", name: String = "", expiryDate: String = "") {
         self.number = number
         self.name = name
         self.expiryDate = expiryDate

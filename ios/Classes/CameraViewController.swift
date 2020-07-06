@@ -26,47 +26,105 @@ public class CameraViewController: UIViewController {
     var device: AVCaptureDevice!
     var input: AVCaptureDeviceInput!
 
-    @IBOutlet weak var cameraView: UIView!
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         gainCameraPermission()
-
     }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
 
+        if isBeingDismissed {
+            stopScanning()
+        }
+    }
+    
+    public override func viewWillLayoutSubviews() {
+        let width = self.view.frame.width
+        let navigationBar: UINavigationBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: width, height: 44))
+        self.view.addSubview(navigationBar);
+        let navigationItem = UINavigationItem(title: "Scan Card")
+        let closeButton = UIBarButtonItem(title: "Close", style: .done, target: nil, action: #selector(selectorX))
+        navigationItem.leftBarButtonItem = closeButton
+        navigationBar.setItems([navigationItem], animated: false)
+    }
+    
+    @objc func selectorX() {
+        stopScanning()
+        cameraDelegate?.cameraDidStopScanning(self)
+    }
+    
     func setupCaptureSession() {
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .high
-
+        
         guard let safeCaptureDevice = AVCaptureDevice.default(for: .video) else {
             return
         }
-
+        
         guard let safeCaptureDeviceInput = try? AVCaptureDeviceInput(device: safeCaptureDevice) else {
             return
         }
-
+        
         device = safeCaptureDevice
         input = safeCaptureDeviceInput
-
+        
         refocus()
-
+        
+        addInputDeviceToSession()
+        
+        createAndAddPreviewLayer()
+        
+        addOutputToInputDevice()
+        
+        overlayCardLens()
+        
+        startScanning()
+    }
+    
+    func gainCameraPermission() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            setupCaptureSession()
+            
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    self.setupCaptureSession()
+                }
+            }
+            
+        case .denied, .restricted:
+            // The user has previously denied access; or
+            // The user can't grant access due to restrictions.
+            fallthrough
+            
+        @unknown default:
+            NSLog("Camera Permissions Error")
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func addInputDeviceToSession() {
         captureSession.addInput(input)
-
+    }
+    
+    func createAndAddPreviewLayer() {
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-
+        
         view.layer.addSublayer(previewLayer)
         previewLayer.frame = view.frame
-
+    }
+    
+    func addOutputToInputDevice() {
         let dataOutput = AVCaptureVideoDataOutput()
         dataOutput.alwaysDiscardsLateVideoFrames = true
         dataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "Video Queue"))
         captureSession.addOutput(dataOutput)
-
-        startScanning()
     }
-
+    
     func refocus() {
         do {
             try device.lockForConfiguration()
@@ -75,39 +133,38 @@ public class CameraViewController: UIViewController {
             print(error)
         }
     }
-
-    func gainCameraPermission() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            self.setupCaptureSession()
-
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted {
-                    self.setupCaptureSession()
-                }
-            }
-        case .denied, .restricted:
-            // The user has previously denied access; or
-            // The user can't grant access due to restrictions.
-            fallthrough
-        @unknown default:
-            print("Camera Permissions Error")
-            dismiss(animated: true, completion: nil)
-        }
+    
+    func overlayCardLens() {
+        overlayBezierForCard()
+        overlayTopSideIndicator()
     }
-
-    func startScanning() {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            self.stopScanning()
-            self.cameraDelegate?.cameraDidStopScanning(self)
-        }
-
+    
+    func overlayBezierForCard() {
+        let layer = CAShapeLayer()
+        layer.path = UIBezierPath(roundedRect: CGRect(x: 64, y: 84, width: 300, height: 480), cornerRadius: 10).cgPath
+        layer.strokeColor = UIColor.black.cgColor
+        layer.fillColor = UIColor.clear.cgColor
+        view.layer.addSublayer(layer)
+    }
+    
+    func overlayTopSideIndicator() {
+        let layer = CAShapeLayer()
+        layer.path = UIBezierPath(roundedRect: CGRect(x: 334, y: 94, width: 20, height: 20), cornerRadius: 20).cgPath
+        layer.fillColor = UIColor.black.cgColor
+        view.layer.addSublayer(layer)
+    }
+    
+    public func startScanning() {
+        // TODO: Turn on based on duration option in CardOptions
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+//            self.stopScanning()
+//            self.cameraDelegate?.cameraDidStopScanning(self)
+//        }
+        
         captureSession.startRunning()
     }
-
-    func stopScanning() {
+    
+    public func stopScanning() {
         DispatchQueue.main.async {
             self.device.unlockForConfiguration()
             self.captureSession.stopRunning()
@@ -129,7 +186,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         if scanDropLimitReached() {
             scansDroppedSinceLastReset = 0
             guard let result = try? textRecognizer.results(in: visionImage) else {
-                print("Text Recognizer", "Something went wrong while setting up TextRecognizer")
+                NSLog("Text Recognizer", "Something went wrong while setting up TextRecognizer")
                 return
             }
 
@@ -137,13 +194,13 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             refocus()
         }
     }
-
-    func scanDropLimitReached() -> Bool {
-        return scansDroppedSinceLastReset == CameraViewController.maxScansToDrop
-    }
 }
 
 extension CameraViewController {
+    func scanDropLimitReached() -> Bool {
+        return scansDroppedSinceLastReset == CameraViewController.maxScansToDrop
+    }
+    
     static func imageOrientation(videoOrientation: AVCaptureVideoOrientation) -> UIImage.Orientation {
         switch videoOrientation {
         case .portrait:
