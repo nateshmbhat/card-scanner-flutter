@@ -25,8 +25,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> scanCard() async {
     CardDetails cardDetails;
     try {
-      cardDetails =
-          await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true, scanCardIssuer: true));
+      cardDetails = await CardScanner.scanCard(
+          scanOptions:
+              CardScanOptions(scanCardHolderName: true, scanCardIssuer: true));
     } on PlatformException catch (e) {
       print('Failed to get platform version : $e');
       return;
