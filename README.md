@@ -79,5 +79,3 @@ Card Holder Name = PAUL SAMUELSON
 ```
 
 ### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
-
----
