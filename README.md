@@ -7,6 +7,7 @@
 [![](https://img.shields.io/badge/package-flutter-blue)](https://github.com/nateshmbhat/card-scanner-flutter)
 [![](https://img.shields.io/github/license/nateshmbhat/card-scanner-flutter)](https://github.com/nateshmbhat/card-scanner)
 [![](https://img.shields.io/github/languages/code-size/nateshmbhat/card-scanner-flutter)](https://github.com/nateshmbhat/card-scanner-flutter)
+[![](https://img.shields.io/badge/platform-android%20%26%20ios-bg)](https://github.com/nateshmbhat/card-scanner-flutter)
 [![](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fnateshmbhat%2Fcard-scanner-flutter)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fnateshmbhat%2Fcard-scanner-flutter)
 
 
@@ -19,6 +20,7 @@
 - 🎈 Can scan **Expiry date** , **Card Holder name** and **Card Issuer** (lacked by other scanners) along with the **Card number**✨
 - 🔋Powered by Google's Machine Learning models
 - ⚡ Great performance and accuracy
+- 🧹Auto checks the card number for errors using card checksum algorithms
 - 🎚Supports controlling parameters that determine the balance between speed and accuracy
 - ❤️ Simple, powerful, & intuitive API 
 
@@ -79,8 +81,3 @@ Card Holder Name = PAUL SAMUELSON
 ### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
 
 ---
-
-### What next ? 
-+ IOS support coming very soon 🚀
-+ More control options for scanning behavior
-+ Better optimizations for name scanning is in the todo list :)
