@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nateshmbhat/card-scanner-flutter/master/.github/logo.png?sanitize=true" width="250px">
+  <img src="https://raw.githubusercontent.com/nateshmbhat/card-scanner-flutter/master/.github/logo.gif?sanitize=true" width="250px">
 </p>
 <h2 align="center">Fast, Accurate and Secure Credit & Debit card scanner for Flutter </h2>
 
