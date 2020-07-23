@@ -22,6 +22,11 @@
 - 🎚Supports controlling parameters that determine the balance between speed and accuracy
 - ❤️ Simple, powerful, & intuitive API
 
+
+### Get Demo App Here :
+[![Vision App](https://raw.githubusercontent.com/wiki/blinkid/blinkid-android/images/playstore.png)](https://play.google.com/store/apps/details?id=com.nateshmbhat.card_scanner_example) 
+
+
 ## Install
 
 Add this to your package's pubspec.yaml file:
