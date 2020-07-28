@@ -3,27 +3,26 @@
 import 'package:card_scanner/utils.dart';
 
 class CardDetails {
-  var _cardNumber = "";
-  var _cardIssuer = "";
-  var _cardHolderName = "";
-  var _expiryDate = "";
-
-  get cardNumber => _cardNumber;
+  String _cardNumber = "";
+  String _cardIssuer = "";
+  String _cardHolderName = "";
+  String _expiryDate = "";
 
   CardDetails.fromMap(Map<String, String> map) {
     _cardNumber = map['cardNumber'];
-    _cardIssuer = map['cardIssuer'].isNotEmpty ? map['cardIssuer'] : CardUtils().getCardIssuer(_cardNumber).toString();
+    _cardIssuer = map['cardIssuer'].isNotEmpty
+        ? map['cardIssuer']
+        : CardUtils().getCardIssuer(_cardNumber).toString();
     _cardHolderName = map['cardHolderName'];
     _expiryDate = map['expiryDate'];
   }
 
-  toMap() {
-    Map<String, String> map = {};
-    map['cardNumber'] = _cardNumber;
-    map['cardIssuer'] = _cardIssuer;
-    map['cardHolderName'] = _cardHolderName;
-    map['expiryDate'] = _expiryDate;
-  }
+  Map<String, String> get map => {
+        'cardNumber': _cardNumber,
+        'cardIssuer': _cardIssuer,
+        'cardHolderName': _cardHolderName,
+        'expiryDate': _expiryDate,
+      };
 
   @override
   String toString() {
@@ -31,13 +30,16 @@ class CardDetails {
     string += _cardNumber.isEmpty ? "" : 'Card Number = $cardNumber\n';
     string += _expiryDate.isEmpty ? "" : 'Expiry Date = $expiryDate\n';
     string += _cardIssuer.isEmpty ? "" : 'Card Issuer = $cardIssuer\n';
-    string += _cardHolderName.isEmpty ? "" : 'Card Holder Name = $cardHolderName\n';
+    string +=
+        _cardHolderName.isEmpty ? "" : 'Card Holder Name = $cardHolderName\n';
     return string;
   }
 
-  get cardIssuer => _cardIssuer;
+  get cardNumber => _cardNumber;
 
-  get cardHolderName => _cardHolderName;
+  String get cardIssuer => _cardIssuer;
 
-  get expiryDate => _expiryDate;
+  String get cardHolderName => _cardHolderName;
+
+  String get expiryDate => _expiryDate;
 }

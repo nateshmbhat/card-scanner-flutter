@@ -1,20 +1,19 @@
 // @author nateshmbhat created on 30,June,2020
 
 class CardScanOptions {
-  final scanExpiryDate;
-  final scanCardHolderName;
-  final scanCardIssuer;
+  final bool scanExpiryDate;
+  final bool scanCardHolderName;
+  final bool scanCardIssuer;
 
-  CardScanOptions(
-      {this.scanExpiryDate = true,
-      this.scanCardHolderName = false,
-      this.scanCardIssuer = false});
+  const CardScanOptions({
+    this.scanExpiryDate = true,
+    this.scanCardHolderName = false,
+    this.scanCardIssuer = false,
+  });
 
-  Map<String, String> toMap() {
-    Map<String, String> map = {};
-    map['scanExpiryDate'] = scanExpiryDate.toString();
-    map['scanCardHolderName'] = scanCardHolderName.toString();
-    map['scanCardIssuer'] = scanCardIssuer.toString();
-    return map;
-  }
+  Map<String, String> get map => {
+        'scanExpiryDate': scanExpiryDate.toString(),
+        'scanCardHolderName': scanCardHolderName.toString(),
+        'scanCardIssuer': scanCardIssuer.toString(),
+      };
 }

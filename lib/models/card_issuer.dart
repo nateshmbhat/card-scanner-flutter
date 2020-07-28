@@ -14,4 +14,5 @@ enum CardIssuer {
   solo,
   unionPay,
   koreanLocal,
+  unknown
 }
