@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:card_scanner/card_scanner.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,8 +16,7 @@ class _MyAppState extends State<MyApp> {
   CardDetails _cardDetails;
 
   Future<void> scanCard() async {
-    var cardDetails =
-        await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true, scanCardIssuer: true));
+    var cardDetails = await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true));
 
     if (!mounted) return;
     setState(() {
