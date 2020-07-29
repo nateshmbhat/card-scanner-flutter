@@ -6,7 +6,6 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -49,13 +48,14 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
     scannerLayout = findViewById(R.id.scannerLayout);
     scannerBar = findViewById(R.id.scannerBar);
+    supportActionBar?.hide();
 
     val vto = scannerLayout.viewTreeObserver;
     vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
       override fun onGlobalLayout() {
         scannerLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
         animator = ObjectAnimator.ofFloat(scannerBar, "translationY",
-                scannerLayout.y-scannerBar.height,
+                scannerLayout.y - scannerBar.height,
                 (scannerLayout.y +
                         scannerLayout.height - scannerBar.height))
         animator.repeatMode = ValueAnimator.REVERSE

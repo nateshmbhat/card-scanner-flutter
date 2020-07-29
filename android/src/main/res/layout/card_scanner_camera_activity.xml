@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,43 +13,49 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="225dp"
-            android:background="@color/semitransparent"
-
-            />
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="center">
+            android:background="@color/semitransparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/bSearch"
+                    android:layout_width="wrap_content"
+                    android:background="@color/semitransparent"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <View
                 android:id="@+id/left"
                 android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
+                android:layout_height="260dp"
                 android:background="@color/semitransparent" />
 
 
             <LinearLayout
                 android:id="@+id/scannerLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="260dp"
-                android:layout_centerInParent="true"
-                android:layout_toStartOf="@+id/right"
-                android:layout_toLeftOf="@id/right"
-                android:layout_toEndOf="@+id/left"
-                android:layout_toRightOf="@id/left"
+                android:layout_weight="1"
                 android:background="@drawable/ic_scan_border"
                 android:minHeight="800dp"
                 android:orientation="horizontal">
-
 
                 <View
                     android:id="@+id/scannerBar"
@@ -61,18 +67,30 @@
             <View
                 android:id="@+id/right"
                 android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_height="260dp"
                 android:background="@color/semitransparent" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/semitransparent" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="6sp"
+            android:layout_centerInParent="true"
+            android:text="Scan your credit card to proceed"
+            android:textAlignment="center"
+            android:textColor="#f0f0f5"
+            android:textSize="12sp" />
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="225dp"
-            android:background="@color/semitransparent" />
-
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>
