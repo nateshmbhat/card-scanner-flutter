@@ -11,6 +11,7 @@
             android:value="ocr" />
         <activity
             android:name=".CardScannerCameraActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat">
         </activity>
     </application>

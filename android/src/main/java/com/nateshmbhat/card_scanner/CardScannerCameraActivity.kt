@@ -1,9 +1,17 @@
 package com.nateshmbhat.card_scanner
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -13,34 +21,50 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
+import com.nateshmbhat.card_scanner.scanner_core.TextRecognitionProcessor
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import android.app.Activity
 
-import android.content.Intent
-import com.nateshmbhat.card_scanner.scanner_core.TextRecognitionProcessor
-import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions
 
 typealias onCardScanned = (cardDetails: CardDetails) -> Unit
 
 class CardScannerCameraActivity : AppCompatActivity() {
-  private var preview: Preview? = null
-  private var imageCapture: ImageCapture? = null
-  private var imageAnalyzer: ImageAnalysis? = null
-  private var camera: Camera? = null
   private var previewUseCase: Preview? = null;
   private var cameraProvider: ProcessCameraProvider? = null
   private var cameraSelector: CameraSelector? = null
   private var textRecognizer: TextRecognizer? = null
   private var analysisUseCase: ImageAnalysis? = null
-  private lateinit var cardScanOptions :CardScanOptions
+  private lateinit var cardScanOptions: CardScanOptions
   private lateinit var cameraExecutor: ExecutorService
+  lateinit var animator: ObjectAnimator
+  lateinit var scannerLayout: View
+  lateinit var scannerBar: View
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.card_scanner_camera_activity)
     cardScanOptions = intent.getParcelableExtra<CardScanOptions>(CARD_SCAN_OPTIONS)
+
+    scannerLayout = findViewById(R.id.scannerLayout);
+    scannerBar = findViewById(R.id.scannerBar);
+
+    val vto = scannerLayout.viewTreeObserver;
+    vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+      override fun onGlobalLayout() {
+        scannerLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        animator = ObjectAnimator.ofFloat(scannerBar, "translationY",
+                scannerLayout.y-scannerBar.height,
+                (scannerLayout.y +
+                        scannerLayout.height - scannerBar.height))
+        animator.repeatMode = ValueAnimator.REVERSE
+        animator.repeatCount = ValueAnimator.INFINITE
+        animator.interpolator = AccelerateDecelerateInterpolator()
+        animator.duration = 3000
+        animator.start()
+      }
+    })
 
     cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -98,7 +122,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
       cameraProvider?.unbind(previewUseCase)
     }
     previewUseCase = Preview.Builder().build()
-    val previewView = findViewById<PreviewView>(R.id.viewFinder)
+    val previewView = findViewById<PreviewView>(R.id.cameraView)
     previewUseCase!!.setSurfaceProvider(previewView.createSurfaceProvider())
     cameraProvider?.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, previewUseCase)
   }
@@ -115,7 +139,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
     val analysisUseCase = ImageAnalysis.Builder().build()
             .also {
-              it.setAnalyzer(cameraExecutor, TextRecognitionProcessor (cardScanOptions) { cardDetails ->
+              it.setAnalyzer(cameraExecutor, TextRecognitionProcessor(cardScanOptions) { cardDetails ->
                 Log.d(TAG, "Card recognized : $cardDetails")
                 val returnIntent: Intent = Intent()
                 returnIntent.putExtra(SCAN_RESULT, cardDetails)
@@ -130,7 +154,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
     private const val TAG = "CameraXBasic"
     private const val REQUEST_CODE_PERMISSIONS = 10
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-    const val SCAN_RESULT : String = "scan_result"
+    const val SCAN_RESULT: String = "scan_result"
     const val CARD_SCAN_OPTIONS = "card_scan_options"
   }
 

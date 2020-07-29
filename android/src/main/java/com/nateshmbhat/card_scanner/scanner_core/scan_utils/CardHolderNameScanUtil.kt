@@ -13,7 +13,7 @@ class CardHolderNameScanUtil {
             "axis", "sbi", "axis bank", "credit", "card", "titanium", "bank", "global", "state bank", "of", "the", "india", "valid only", "classic", "gold", "sbi card",
             "visa classic", "visa signature", "visa gold", "electronic", "use only", "electronic use only", "only", "use"
             , "expires", "end", "expires end", "valid till", "expire date", "date", "expiry", "expiry date", "premier",
-            "world", "uk", "hsbc", "amex", "valid from valid thru", "valid from valid till", "member since"
+            "world", "uk", "hsbc", "amex", "valid from valid thru", "valid from valid till", "member since" , "prepaid"
     )
 
     fun extractCardHolderName(visionText: Text, cardNumberBlockPosition: Int, cardExpiryDateBlockPosition: Int): String {
