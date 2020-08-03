@@ -23,12 +23,14 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/bSearch"
-                    android:layout_width="wrap_content"
-                    android:background="@color/semitransparent"
-                    android:layout_height="wrap_content"
-                    android:textSize="24sp"/>
+<!--                <Button-->
+<!--                    android:height="16dp"-->
+<!--                    android:width="19dp"-->
+<!--                    android:id="@+id/bSearch"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:background="@drawable/ic_back_arrow"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="24sp"/>-->
 
             </LinearLayout>
 
@@ -84,7 +86,7 @@
             android:gravity="center"
             android:lineSpacingExtra="6sp"
             android:layout_centerInParent="true"
-            android:text="Scan your credit card to proceed"
+            android:text="Scan your card to proceed"
             android:textAlignment="center"
             android:textColor="#f0f0f5"
             android:textSize="12sp" />
