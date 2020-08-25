@@ -27,7 +27,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * CardScannerPlugin
  */
 public class CardScannerPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
-    private static final int SCAN_REQUEST_CODE = 666;
+    private static final int SCAN_REQUEST_CODE = 84983;
     private Activity activity;
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
@@ -91,21 +91,21 @@ public class CardScannerPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SCAN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.hasExtra(CardScannerCameraActivity.SCAN_RESULT)) {
-                CardDetails cardDetails = data.getParcelableExtra(CardScannerCameraActivity.SCAN_RESULT);
-                pendingResult.success(cardDetails.toMap());
-            } else {
+        if (requestCode == SCAN_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null && data.hasExtra(CardScannerCameraActivity.SCAN_RESULT)) {
+                    CardDetails cardDetails = data.getParcelableExtra(CardScannerCameraActivity.SCAN_RESULT);
+                    pendingResult.success(cardDetails.toMap());
+                } else {
+                    pendingResult.success(null);
+                }
+                pendingResult = null;
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 pendingResult.success(null);
+                pendingResult = null;
             }
-
-            pendingResult = null;
             return true;
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            pendingResult.success(null);
-            pendingResult = null;
-        }
-        return false;
+        } else return false;
     }
 
     @Override
