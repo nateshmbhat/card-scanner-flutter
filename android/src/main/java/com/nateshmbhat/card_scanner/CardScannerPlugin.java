@@ -27,7 +27,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * CardScannerPlugin
  */
 public class CardScannerPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
-    private static final int SCAN_REQUEST_CODE = 84983;
+    private static final int SCAN_REQUEST_CODE = 49193;
     private Activity activity;
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
