@@ -26,6 +26,8 @@
 ### Get Demo App Here :
 [![Vision App](https://raw.githubusercontent.com/wiki/blinkid/blinkid-android/images/playstore.png)](https://play.google.com/store/apps/details?id=com.nateshmbhat.card_scanner_example) 
 
+<img src=".github/scan.gif" height="300">
+
 
 ## Install
 
