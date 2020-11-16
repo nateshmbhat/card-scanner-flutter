@@ -12,10 +12,10 @@ data class CardDetails(
         val expiryDate: String = "") : Parcelable {
 
   constructor(parcel: Parcel) : this(
-          parcel.readString(),
-          parcel.readString(),
-          parcel.readString(),
-          parcel.readString()) {
+          parcel.readString()!!,
+          parcel.readString()!!,
+          parcel.readString()!!,
+          parcel.readString()!!) {
   }
 
   fun toMap(): Map<String, String> {
