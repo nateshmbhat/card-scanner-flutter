@@ -90,7 +90,5 @@ Card Holder Name = PAUL SAMUELSON
 
 ## iOS Requirements
 * The minimum target for iOS should be >= 12.0.0
-* Comment out the `use_frameworks!` line from under `Podfile` of your Flutter project. 
-You can find this `Podfile` under `your_flutter_project/ios/Podfile`
 
 ### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
