@@ -44,7 +44,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.card_scanner_camera_activity)
-    cardScanOptions = intent.getParcelableExtra<CardScanOptions>(CARD_SCAN_OPTIONS)
+    cardScanOptions = intent.getParcelableExtra<CardScanOptions>(CARD_SCAN_OPTIONS) ?: cardScanOptions
 
     scannerLayout = findViewById(R.id.scannerLayout);
     scannerBar = findViewById(R.id.scannerBar);
