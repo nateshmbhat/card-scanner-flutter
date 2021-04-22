@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
 import 'package:card_scanner/card_scanner.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,8 +16,11 @@ class _MyAppState extends State<MyApp> {
   CardDetails _cardDetails;
 
   Future<void> scanCard() async {
-    var cardDetails =
-        await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true));
+    var cardDetails = await CardScanner.scanCard(
+        scanOptions: CardScanOptions(
+            scanCardHolderName: true,
+            enableDebugLogs: true,
+            possibleCardHolderNamePositions: [CardHolderNameScanPosition.aboveCardNumber]));
 
     if (!mounted) return;
     setState(() {
@@ -38,10 +41,7 @@ class _MyAppState extends State<MyApp> {
             children: [
               RaisedButton(
                 onPressed: () async {
-                  var status = await Permission.camera.request();
-                  if (status == PermissionStatus.granted) {
-                    scanCard();
-                  }
+                  scanCard();
                 },
                 child: Text('scan card'),
               ),

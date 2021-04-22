@@ -19,20 +19,15 @@
             android:layout_weight="1"
             android:background="@color/semitransparent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-<!--                <Button-->
-<!--                    android:height="16dp"-->
-<!--                    android:width="19dp"-->
-<!--                    android:id="@+id/bSearch"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:background="@drawable/ic_back_arrow"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textSize="24sp"/>-->
+            <Button
+                android:id="@+id/backButton"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="28dp"
+                android:layout_width="20dp"
+                android:background="@drawable/ic_back_arrow"
+                android:layout_height="17dp"
+                android:textSize="24sp"/>
 
-            </LinearLayout>
 
         </RelativeLayout>
 

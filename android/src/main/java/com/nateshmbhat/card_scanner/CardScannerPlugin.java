@@ -3,14 +3,12 @@ package com.nateshmbhat.card_scanner;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails;
-import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions;
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScannerOptions;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -21,7 +19,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /**
  * CardScannerPlugin
@@ -83,9 +80,9 @@ public class CardScannerPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     void showCameraActivity(MethodCall call) {
         Map<String, String> map = (Map<String, String>) call.arguments;
-        CardScanOptions cardScanOptions = new CardScanOptions(map);
+        CardScannerOptions cardScannerOptions = new CardScannerOptions(map);
         Intent intent = new Intent(context, CardScannerCameraActivity.class);
-        intent.putExtra(CardScannerCameraActivity.CARD_SCAN_OPTIONS, cardScanOptions);
+        intent.putExtra(CardScannerCameraActivity.CARD_SCAN_OPTIONS, cardScannerOptions);
         activity.startActivityForResult(intent, SCAN_REQUEST_CODE);
     }
 

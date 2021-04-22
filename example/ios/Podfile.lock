@@ -3,62 +3,59 @@ PODS:
     - Flutter
     - GoogleMLKit/TextRecognition
   - Flutter (1.0.0)
-  - GoogleDataTransport (3.3.1)
-  - GoogleDataTransportCCTSupport (1.3.1):
-    - GoogleDataTransport (~> 3.3)
-    - nanopb (~> 0.3.901)
-  - GoogleMLKit/MLKitCore (0.61.0):
-    - MLKitCommon (~> 0.61.0)
-  - GoogleMLKit/TextRecognition (0.61.0):
+  - GoogleDataTransport (8.2.0):
+    - nanopb (~> 2.30907.0)
+  - GoogleMLKit/MLKitCore (2.0.0):
+    - MLKitCommon (~> 2.0.0)
+  - GoogleMLKit/TextRecognition (2.0.0):
     - GoogleMLKit/MLKitCore
-    - MLKitTextRecognition (~> 0.61.0)
-  - GoogleToolboxForMac/DebugUtils (2.2.2):
-    - GoogleToolboxForMac/Defines (= 2.2.2)
-  - GoogleToolboxForMac/Defines (2.2.2)
-  - GoogleToolboxForMac/Logger (2.2.2):
-    - GoogleToolboxForMac/Defines (= 2.2.2)
-  - "GoogleToolboxForMac/NSData+zlib (2.2.2)":
-    - GoogleToolboxForMac/Defines (= 2.2.2)
-  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.2.2)":
-    - GoogleToolboxForMac/DebugUtils (= 2.2.2)
-    - GoogleToolboxForMac/Defines (= 2.2.2)
-    - "GoogleToolboxForMac/NSString+URLArguments (= 2.2.2)"
-  - "GoogleToolboxForMac/NSString+URLArguments (2.2.2)"
-  - GoogleUtilities/Environment (6.6.0):
+    - MLKitTextRecognition (~> 1.1.0)
+  - GoogleToolboxForMac/DebugUtils (2.3.1):
+    - GoogleToolboxForMac/Defines (= 2.3.1)
+  - GoogleToolboxForMac/Defines (2.3.1)
+  - GoogleToolboxForMac/Logger (2.3.1):
+    - GoogleToolboxForMac/Defines (= 2.3.1)
+  - "GoogleToolboxForMac/NSData+zlib (2.3.1)":
+    - GoogleToolboxForMac/Defines (= 2.3.1)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.3.1)":
+    - GoogleToolboxForMac/DebugUtils (= 2.3.1)
+    - GoogleToolboxForMac/Defines (= 2.3.1)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.1)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.3.1)"
+  - GoogleUtilities/Environment (7.2.2):
     - PromisesObjC (~> 1.2)
-  - GoogleUtilities/Logger (6.6.0):
+  - GoogleUtilities/Logger (7.2.2):
     - GoogleUtilities/Environment
-  - GoogleUtilities/UserDefaults (6.6.0):
+  - GoogleUtilities/UserDefaults (7.2.2):
     - GoogleUtilities/Logger
   - GoogleUtilitiesComponents (1.0.0):
     - GoogleUtilities/Logger
-  - GTMSessionFetcher/Core (1.4.0)
-  - MLKitCommon (0.61.0):
-    - GoogleDataTransport (~> 3.2)
-    - GoogleDataTransportCCTSupport (~> 1.2)
+  - GTMSessionFetcher/Core (1.5.0)
+  - MLKitCommon (2.0.0):
+    - GoogleDataTransport (~> 8.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
-    - GoogleUtilities/UserDefaults (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 7.0)
     - GoogleUtilitiesComponents (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.12)
-  - MLKitTextRecognition (0.61.0):
-    - MLKitCommon (~> 0.61)
-    - MLKitVision (~> 0.61)
-  - MLKitVision (0.61.0):
+  - MLKitTextRecognition (1.1.0):
+    - MLKitCommon (~> 2.0)
+    - MLKitVision (~> 1.1)
+  - MLKitVision (1.1.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
-    - MLKitCommon (~> 0.61)
+    - MLKitCommon (~> 2.0)
     - Protobuf (~> 3.12)
-  - nanopb (0.3.9011):
-    - nanopb/decode (= 0.3.9011)
-    - nanopb/encode (= 0.3.9011)
-  - nanopb/decode (0.3.9011)
-  - nanopb/encode (0.3.9011)
-  - PromisesObjC (1.2.9)
-  - Protobuf (3.12.0)
+  - nanopb (2.30907.0):
+    - nanopb/decode (= 2.30907.0)
+    - nanopb/encode (= 2.30907.0)
+  - nanopb/decode (2.30907.0)
+  - nanopb/encode (2.30907.0)
+  - PromisesObjC (1.2.12)
+  - Protobuf (3.14.0)
 
 DEPENDENCIES:
   - card_scanner (from `.symlinks/plugins/card_scanner/ios`)
@@ -67,7 +64,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - GoogleDataTransport
-    - GoogleDataTransportCCTSupport
     - GoogleMLKit
     - GoogleToolboxForMac
     - GoogleUtilities
@@ -87,22 +83,21 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  card_scanner: 558ec4d574484250562e63ec60fee50b0a8eec49
+  card_scanner: 2ef22da164d7fc6dba57c41bf8757fd5fda53c9f
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  GoogleDataTransport: 0048df6388dab1c254799f2a30365b1dffe20422
-  GoogleDataTransportCCTSupport: f880d70972efa2ed1be4e9173a0f4c5f3dc2d176
-  GoogleMLKit: e05f6a167cfddf82593168561917bebd920f6a82
-  GoogleToolboxForMac: 800648f8b3127618c1b59c7f97684427630c5ea3
-  GoogleUtilities: 39530bc0ad980530298e9c4af8549e991fd033b1
+  GoogleDataTransport: 1024b1a4dfbd7a0e92cb20d7e0a6f1fb66b449a4
+  GoogleMLKit: 2a9032170872c4464d516700a04661d6e5b98a77
+  GoogleToolboxForMac: 471e0c05d39506e50e6398f46fa9a12ae0efeff9
+  GoogleUtilities: 31c5b01f978a70c6cff2afc6272b3f1921614b43
   GoogleUtilitiesComponents: a69c0b3b369ba443e988141e75ef49d9010b1c80
-  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
-  MLKitCommon: 820fbd1d5af7bb75c4d697ed44397e0ba7443ccb
-  MLKitTextRecognition: 37e0f5915d43dbc0b267dff8571f295be8f51595
-  MLKitVision: 192a127e63701d1c061c7a45538557486bc7a4d6
-  nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
-  Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
+  MLKitCommon: 746a9b06e05a6a5dc9636a8ea376c3145f0a5338
+  MLKitTextRecognition: a04dace82086c321e2201fd21542971645c47279
+  MLKitVision: d8152c0ecdefb17ab680be0457f90ce9f3544f43
+  nanopb: 59221d7f958fb711001e6a449489542d92ae113e
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  Protobuf: 0cde852566359049847168e51bd1c690e0f70056
 
-PODFILE CHECKSUM: 7e51f282f5965f2fa3d5aa791c09a3af50a5aa12
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.10.1
