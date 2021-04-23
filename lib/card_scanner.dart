@@ -13,7 +13,7 @@ class CardScanner {
       const MethodChannel('nateshmbhat/card_scanner');
   static const _scan_card = 'scan_card';
 
-  static Future<CardDetails> scanCard({CardScanOptions scanOptions}) async {
+  static Future<CardDetails?> scanCard({CardScanOptions? scanOptions}) async {
     scanOptions ??= CardScanOptions();
     final scanResult = await _channel.invokeMapMethod<String, String>(
         _scan_card, scanOptions.map);

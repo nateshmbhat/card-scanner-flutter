@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.0-prerelease
++ migrating to null safety
+
 ## 0.2.1
 + Adds many options to control scanning behavior
 + improved card holder name scanning and expiry date scanning accuracy

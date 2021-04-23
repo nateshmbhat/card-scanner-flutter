@@ -9,10 +9,10 @@ class CardDetails {
   String _expiryDate = "";
 
   CardDetails.fromMap(Map<String, String> map) {
-    _cardNumber = map['cardNumber'];
+    _cardNumber = map['cardNumber'] ?? '';
     _cardIssuer = CardUtils().getCardIssuer(_cardNumber).toString();
-    _cardHolderName = map['cardHolderName'];
-    _expiryDate = map['expiryDate'];
+    _cardHolderName = map['cardHolderName'] ?? '';
+    _expiryDate = map['expiryDate'] ?? '';
   }
 
   Map<String, String> get map => {

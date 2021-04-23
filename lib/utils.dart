@@ -3,8 +3,8 @@
 import 'package:card_scanner/card_scanner.dart';
 
 class CardUtils {
-  final mastercard = RegExp(
-      '^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))\$');
+  final mastercard =
+      RegExp('^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))\$');
   final visa = RegExp('^4[0-9]{12}(?:[0-9]{3})?\$');
   final amex = RegExp('^3[47][0-9]{13}\$');
   final bCGlobal = RegExp('^(6541|6556)[0-9]{12}\$');
@@ -17,8 +17,7 @@ class CardUtils {
   final koreanLocalCard = RegExp('^9[0-9]{15}\$');
   final maestro = RegExp('^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}\$');
 
-  final solo = RegExp(
-      '^(6334|6767)[0-9]{12}|(6334|6767)[0-9]{14}|(6334|6767)[0-9]{15}\$');
+  final solo = RegExp('^(6334|6767)[0-9]{12}|(6334|6767)[0-9]{14}|(6334|6767)[0-9]{15}\$');
   final unionPay = RegExp('^(62[0-9]{14,17})\$');
   final unknown = RegExp('.*');
 
@@ -58,6 +57,6 @@ class CardUtils {
       unknown,
     ].firstWhere((element) => element.hasMatch(cardNumber));
 
-    return issuerMap[matchingRegex];
+    return issuerMap[matchingRegex]!;
   }
 }
