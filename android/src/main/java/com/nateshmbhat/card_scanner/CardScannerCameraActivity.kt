@@ -20,14 +20,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
-import com.nateshmbhat.card_scanner.scanner_core.TextRecognitionProcessor
+import com.nateshmbhat.card_scanner.logger.debugLog
+import com.nateshmbhat.card_scanner.scanner_core.CardScanner
 import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
-import com.nateshmbhat.card_scanner.scanner_core.models.CardScanOptions
+import com.nateshmbhat.card_scanner.scanner_core.models.CardScannerOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-typealias onCardScanned = (cardDetails: CardDetails) -> Unit
+typealias onCardScanned = (cardDetails: CardDetails?) -> Unit
+typealias onCardScanFailed = () -> Unit
 
 class CardScannerCameraActivity : AppCompatActivity() {
   private var previewUseCase: Preview? = null;
@@ -35,22 +37,27 @@ class CardScannerCameraActivity : AppCompatActivity() {
   private var cameraSelector: CameraSelector? = null
   private var textRecognizer: TextRecognizer? = null
   private var analysisUseCase: ImageAnalysis? = null
-  private lateinit var cardScanOptions: CardScanOptions
+  private lateinit var cardScannerOptions: CardScannerOptions
   private lateinit var cameraExecutor: ExecutorService
   lateinit var animator: ObjectAnimator
   lateinit var scannerLayout: View
   lateinit var scannerBar: View
+  lateinit var backButton: View
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.card_scanner_camera_activity)
-    cardScanOptions = intent.getParcelableExtra<CardScanOptions>(CARD_SCAN_OPTIONS) ?: cardScanOptions
+    cardScannerOptions = intent.getParcelableExtra<CardScannerOptions>(CARD_SCAN_OPTIONS)
 
     scannerLayout = findViewById(R.id.scannerLayout);
     scannerBar = findViewById(R.id.scannerBar);
+    backButton = findViewById(R.id.backButton)
     supportActionBar?.hide();
 
     val vto = scannerLayout.viewTreeObserver;
+    backButton.setOnClickListener {
+      finish()
+    }
     vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
       override fun onGlobalLayout() {
         scannerLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -86,7 +93,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
       try {
         bindAllCameraUseCases()
       } catch (exc: Exception) {
-        Log.e(TAG, "Use case binding failed", exc)
+        debugLog("Use case binding failed : $exc", cardScannerOptions)
       }
     }, ContextCompat.getMainExecutor(this))
   }
@@ -123,7 +130,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
     }
     previewUseCase = Preview.Builder().build()
     val previewView = findViewById<PreviewView>(R.id.cameraView)
-    previewUseCase!!.setSurfaceProvider(previewView.createSurfaceProvider())
+    previewUseCase!!.setSurfaceProvider(previewView.surfaceProvider)
     cameraProvider?.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, previewUseCase)
   }
 
@@ -137,15 +144,19 @@ class CardScannerCameraActivity : AppCompatActivity() {
     textRecognizer?.close()
     textRecognizer = TextRecognition.getClient()
 
+    debugLog("card scanner options : $cardScannerOptions", cardScannerOptions)
     val analysisUseCase = ImageAnalysis.Builder().build()
             .also {
-              it.setAnalyzer(cameraExecutor, TextRecognitionProcessor(cardScanOptions) { cardDetails ->
-                Log.d(TAG, "Card recognized : $cardDetails")
+              it.setAnalyzer(cameraExecutor, CardScanner(cardScannerOptions, { cardDetails ->
+                debugLog("Card recognized : $cardDetails", cardScannerOptions)
+
                 val returnIntent: Intent = Intent()
                 returnIntent.putExtra(SCAN_RESULT, cardDetails)
                 setResult(Activity.RESULT_OK, returnIntent)
                 this.finish()
-              })
+              }, onCardScanFailed = {
+                onBackPressed()
+              }))
             }
     cameraProvider!!.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, analysisUseCase)
   }

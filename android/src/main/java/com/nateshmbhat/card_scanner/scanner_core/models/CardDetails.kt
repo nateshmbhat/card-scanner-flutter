@@ -7,30 +7,25 @@ import android.os.Parcelable
 
 data class CardDetails(
         val cardNumber: String,
-        val cardIssuer: String = "",
         val cardHolderName: String = "",
         val expiryDate: String = "") : Parcelable {
 
   constructor(parcel: Parcel) : this(
           parcel.readString() ?: "",
           parcel.readString() ?: "",
-          parcel.readString() ?: "",
-          parcel.readString() ?: "") {
-  }
+          parcel.readString() ?: "")
 
   fun toMap(): Map<String, String> {
     val map = mutableMapOf<String, String>()
-    map.put("cardNumber", cardNumber)
-    map.put("cardIssuer", cardIssuer)
-    map.put("cardHolderName", cardHolderName)
-    map.put("expiryDate", expiryDate)
+    map["cardNumber"] = cardNumber
+    map["cardHolderName"] = cardHolderName
+    map["expiryDate"] = expiryDate
     return map.toMap()
   }
 
 
   override fun writeToParcel(parcel: Parcel, flags: Int) {
     parcel.writeString(cardNumber)
-    parcel.writeString(cardIssuer)
     parcel.writeString(cardHolderName)
     parcel.writeString(expiryDate)
   }

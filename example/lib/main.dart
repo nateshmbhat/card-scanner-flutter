@@ -1,7 +1,10 @@
+import 'dart:math';
+
+import 'package:card_scanner_example/scan_option_configure_widget/scan_option_configure_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
 import 'package:card_scanner/card_scanner.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,11 +17,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   CardDetails _cardDetails;
+  CardScanOptions scanOptions = CardScanOptions(
+    scanCardHolderName: true,
+    // enableDebugLogs: true,
+    validCardsToScanBeforeFinishingScan: 5,
+    possibleCardHolderNamePositions: [
+      CardHolderNameScanPosition.aboveCardNumber,
+    ],
+  );
 
   Future<void> scanCard() async {
-    var cardDetails =
-        await CardScanner.scanCard(scanOptions: CardScanOptions(scanCardHolderName: true));
-
+    var cardDetails = await CardScanner.scanCard(scanOptions: scanOptions);
     if (!mounted) return;
     setState(() {
       _cardDetails = cardDetails;
@@ -38,14 +47,17 @@ class _MyAppState extends State<MyApp> {
             children: [
               RaisedButton(
                 onPressed: () async {
-                  var status = await Permission.camera.request();
-                  if (status == PermissionStatus.granted) {
-                    scanCard();
-                  }
+                  scanCard();
                 },
                 child: Text('scan card'),
               ),
-              Text('$_cardDetails')
+              Text('$_cardDetails'),
+              Expanded(
+                child: OptionConfigureWidget(
+                  initialOptions: scanOptions,
+                  onScanOptionChanged: (newOptions) => scanOptions = newOptions,
+                ),
+              )
             ],
           ),
         ),

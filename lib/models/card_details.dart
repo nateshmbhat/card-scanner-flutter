@@ -10,9 +10,7 @@ class CardDetails {
 
   CardDetails.fromMap(Map<String, String> map) {
     _cardNumber = map['cardNumber'];
-    _cardIssuer = map['cardIssuer'].isNotEmpty
-        ? map['cardIssuer']
-        : CardUtils().getCardIssuer(_cardNumber).toString();
+    _cardIssuer = CardUtils().getCardIssuer(_cardNumber).toString();
     _cardHolderName = map['cardHolderName'];
     _expiryDate = map['expiryDate'];
   }
@@ -30,12 +28,11 @@ class CardDetails {
     string += _cardNumber.isEmpty ? "" : 'Card Number = $cardNumber\n';
     string += _expiryDate.isEmpty ? "" : 'Expiry Date = $expiryDate\n';
     string += _cardIssuer.isEmpty ? "" : 'Card Issuer = $cardIssuer\n';
-    string +=
-        _cardHolderName.isEmpty ? "" : 'Card Holder Name = $cardHolderName\n';
+    string += _cardHolderName.isEmpty ? "" : 'Card Holder Name = $cardHolderName\n';
     return string;
   }
 
-  get cardNumber => _cardNumber;
+  String get cardNumber => _cardNumber;
 
   String get cardIssuer => _cardIssuer;
 
