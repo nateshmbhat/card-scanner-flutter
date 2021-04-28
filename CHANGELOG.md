@@ -1,5 +1,8 @@
 # Changelog
 
+#### 1.0.1-prerelease
+- ios bug fix
+
 ## 1.0.0-prerelease
 + migrating to null safety
 
