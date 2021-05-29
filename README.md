@@ -44,9 +44,9 @@ Just import the package and call `scanCard`:
 
 ```dart
 import 'package:card_scanner/card_scanner.dart';
-var cardDetails = await CardScanner.scanCard()
+var cardDetails = await CardScanner.scanCard();
 
-print(cardDetails)
+print(cardDetails);
 ```
 
 Example Output:
