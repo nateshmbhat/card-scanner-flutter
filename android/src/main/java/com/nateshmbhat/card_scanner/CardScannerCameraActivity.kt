@@ -38,7 +38,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
   private var cameraSelector: CameraSelector? = null
   private var textRecognizer: TextRecognizer? = null
   private var analysisUseCase: ImageAnalysis? = null
-  private lateinit var cardScannerOptions: CardScannerOptions? = null
+  private var cardScannerOptions: CardScannerOptions? = null
   private lateinit var cameraExecutor: ExecutorService
   lateinit var animator: ObjectAnimator
   lateinit var scannerLayout: View
