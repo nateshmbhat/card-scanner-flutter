@@ -183,12 +183,16 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   override fun onPause() {
     super.onPause()
-    textRecognizer!!.close()
+    if(textRecognizer != null) {
+      textRecognizer!!.close()
+    }
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    textRecognizer!!.close()
+    if(textRecognizer != null) {
+      textRecognizer!!.close()
+    }
   }
 
   override fun onBackPressed() {
