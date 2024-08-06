@@ -55,10 +55,12 @@ class CardScanOptions {
 
   Map<String, String> get map {
     final List<String> possibleNamePositions = [];
-    if (possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.belowCardNumber))
+    if (possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.belowCardNumber)) {
       possibleNamePositions.add('belowCardNumber');
-    if (possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.aboveCardNumber))
+    }
+    if (possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.aboveCardNumber)) {
       possibleNamePositions.add('aboveCardNumber');
+    }
 
     return {
       'scanExpiryDate': scanExpiryDate.toString(),

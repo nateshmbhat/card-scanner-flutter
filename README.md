@@ -3,14 +3,15 @@
 </p>
 <h2 align="center">Fast, Accurate and Secure Credit & Debit card scanner for Flutter </h2>
 
-[![](https://img.shields.io/pub/v/card_scanner)](https://pub.dev/packages/card_scanner)
-[![](https://img.shields.io/badge/package-flutter-blue)](https://github.com/nateshmbhat/card-scanner-flutter)
-[![](https://img.shields.io/github/license/nateshmbhat/card-scanner-flutter)](https://github.com/nateshmbhat/card-scanner)
-[![](https://img.shields.io/github/languages/code-size/nateshmbhat/card-scanner-flutter)](https://github.com/nateshmbhat/card-scanner-flutter)
+<!-- [![](https://img.shields.io/pub/v/card_scanner)](https://pub.dev/packages/card_scanner) -->
+
+[![](https://img.shields.io/badge/package-flutter-blue)](https://github.com/jackson-chandler-basys/card-scanner-flutter)
+[![](https://img.shields.io/github/license/nateshmbhat/card-scanner-flutter)](https://github.com/jackson-chandler-basys/card-scanner-flutter)
+[![](https://img.shields.io/github/languages/code-size/nateshmbhat/card-scanner-flutter)](https://github.com/jackson-chandler-basys/card-scanner-flutter)
 [![](https://img.shields.io/badge/platform-android%20%26%20ios-bg)](https://github.com/nateshmbhat/card-scanner-flutter)
-[![](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fnateshmbhat%2Fcard-scanner-flutter)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fnateshmbhat%2Fcard-scanner-flutter)
 
 **card_scanner** is a flutter plugin for accurately and quickly scanning debit and credit cards.
+**card_scanner** was orginally forked from [Natesh Bhat](https://github.com/nateshmbhat/card-scanner-flutter).
 
 ## Features
 
@@ -21,11 +22,6 @@
 - 🧹Auto checks the card number for errors using card checksum algorithms
 - 🎚Supports controlling parameters that determine the balance between speed and accuracy
 - ❤️ Simple, powerful, & intuitive API
-
-
-### Get Demo App Here :
-[![Vision App](https://raw.githubusercontent.com/wiki/blinkid/blinkid-android/images/playstore.png)](https://play.google.com/store/apps/details?id=com.nateshmbhat.card_scanner_example) 
-
 
 ## Install
 
@@ -87,8 +83,9 @@ Card Holder Name = PAUL SAMUELSON
 ```
 
 ## iOS Requirements
-* The minimum target for iOS should be >= 12.0.0
-* Comment out the `use_frameworks!` line from under `Podfile` of your Flutter project. 
-You can find this `Podfile` under `your_flutter_project/ios/Podfile`
 
-### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖
+- The minimum target for iOS should be >= 14.0.0
+- Comment out the `use_frameworks!` line from under `Podfile` of your Flutter project.
+  You can find this `Podfile` under `your_flutter_project/ios/Podfile`
+
+<!-- ### [Documentation & Samples](https://pub.dev/documentation/card_scanner/latest/) 📖 -->

@@ -1,15 +1,16 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:card_scanner/card_scanner.dart';
 
 class OptionConfigureWidget extends StatefulWidget {
   final void Function(CardScanOptions scanOptions) onScanOptionChanged;
-  final CardScanOptions initialOptions;
+  final CardScanOptions? initialOptions;
 
-  const OptionConfigureWidget({Key key, @required this.onScanOptionChanged, this.initialOptions}) : super(key: key);
+  const OptionConfigureWidget({
+    super.key,
+    required this.onScanOptionChanged,
+    this.initialOptions,
+  });
 
   @override
   _OptionConfigureWidgetState createState() => _OptionConfigureWidgetState();
@@ -39,7 +40,7 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
   void initState() {
     if (widget.initialOptions != null) {
       final options = widget.initialOptions;
-      scanExpiryDate = options.scanExpiryDate;
+      scanExpiryDate = options!.scanExpiryDate;
       scanCardHolderName = options.scanCardHolderName;
       initialScansToDrop = options.initialScansToDrop;
       validCardsToScanBeforeFinishingScan = options.validCardsToScanBeforeFinishingScan;
@@ -62,39 +63,38 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
           buildCheckBox('enable Luhn Check', enableLuhnCheck, (newValue) => enableLuhnCheck = newValue),
           buildCheckBox('scan expiry date', scanExpiryDate, (newValue) => scanExpiryDate = newValue),
           buildCheckBox('scan card holder name', scanCardHolderName, (newValue) => scanCardHolderName = newValue),
-          buildCheckBox('consider past dates in expiry scan', considerPastDatesInExpiryDateScan,
-              (newValue) => considerPastDatesInExpiryDateScan = newValue),
+          buildCheckBox('consider past dates in expiry scan', considerPastDatesInExpiryDateScan, (newValue) => considerPastDatesInExpiryDateScan = newValue),
           buildCheckBox('enable debug logs', enableDebugLogs, (newValue) => enableDebugLogs = newValue),
-          buildIntegerEditWidget('min frames to scan before finish', validCardsToScanBeforeFinishingScan,
-              (newValue) => validCardsToScanBeforeFinishingScan = newValue),
           buildIntegerEditWidget(
-              'max card holder name length', maxCardHolderNameLength, (newValue) => maxCardHolderNameLength = newValue),
-          buildIntegerEditWidget('scanner timeout seconds (0 = infinite)', cardScannerTimeOut,
-              (newValue) => cardScannerTimeOut = newValue),
-          buildCheckBox('expect card holder ABOVE card number',
-              possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.aboveCardNumber), (newValue) {
+              'min frames to scan before finish', validCardsToScanBeforeFinishingScan, (newValue) => validCardsToScanBeforeFinishingScan = newValue),
+          buildIntegerEditWidget('max card holder name length', maxCardHolderNameLength, (newValue) => maxCardHolderNameLength = newValue),
+          buildIntegerEditWidget('scanner timeout seconds (0 = infinite)', cardScannerTimeOut, (newValue) => cardScannerTimeOut = newValue),
+          buildCheckBox('expect card holder ABOVE card number', possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.aboveCardNumber),
+              (newValue) {
             if (newValue == true) {
               possibleCardHolderNamePositions.add(CardHolderNameScanPosition.aboveCardNumber);
-            } else
+            } else {
               possibleCardHolderNamePositions.remove(CardHolderNameScanPosition.aboveCardNumber);
+            }
             setState(() {});
           }),
-          buildCheckBox('expect card holder BELOW card number',
-              possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.belowCardNumber), (newValue) {
+          buildCheckBox('expect card holder BELOW card number', possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.belowCardNumber),
+              (newValue) {
             if (newValue == true) {
               possibleCardHolderNamePositions.add(CardHolderNameScanPosition.belowCardNumber);
-            } else
+            } else {
               possibleCardHolderNamePositions.remove(CardHolderNameScanPosition.belowCardNumber);
+            }
             setState(() {});
           }),
-          Divider(),
+          const Divider(),
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Text('black listed card holder names (comma separated)'),
+                const Text('black listed card holder names (comma separated)'),
                 TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder()),
+                  decoration: const InputDecoration(border: OutlineInputBorder()),
                   onChanged: (value) => cardHolderNameBlackListedWords = value.split(','),
                   onEditingComplete: () {
                     setState(() {});
@@ -111,7 +111,7 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
   Widget buildCheckBox(String key, bool value, onChanged) {
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -131,21 +131,21 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
   Widget buildIntegerEditWidget(String key, int value, onChanged) {
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(key),
             Text(value.toString()),
             IconButton(
-              icon: Icon(Icons.arrow_upward),
+              icon: const Icon(Icons.arrow_upward),
               onPressed: () {
                 onChanged(value + 1);
                 setState(() {});
               },
             ),
             IconButton(
-              icon: Icon(Icons.arrow_downward),
+              icon: const Icon(Icons.arrow_downward),
               onPressed: () {
                 onChanged(max(0, value - 1));
                 setState(() {});
