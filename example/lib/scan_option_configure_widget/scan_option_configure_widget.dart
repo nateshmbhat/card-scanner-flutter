@@ -7,10 +7,10 @@ class OptionConfigureWidget extends StatefulWidget {
   final CardScanOptions? initialOptions;
 
   const OptionConfigureWidget({
-    Key? key,
+    super.key,
     required this.onScanOptionChanged,
     this.initialOptions,
-  }) : super(key: key);
+  });
 
   @override
   _OptionConfigureWidgetState createState() => _OptionConfigureWidgetState();
@@ -73,26 +73,28 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
               (newValue) {
             if (newValue == true) {
               possibleCardHolderNamePositions.add(CardHolderNameScanPosition.aboveCardNumber);
-            } else
+            } else {
               possibleCardHolderNamePositions.remove(CardHolderNameScanPosition.aboveCardNumber);
+            }
             setState(() {});
           }),
           buildCheckBox('expect card holder BELOW card number', possibleCardHolderNamePositions.contains(CardHolderNameScanPosition.belowCardNumber),
               (newValue) {
             if (newValue == true) {
               possibleCardHolderNamePositions.add(CardHolderNameScanPosition.belowCardNumber);
-            } else
+            } else {
               possibleCardHolderNamePositions.remove(CardHolderNameScanPosition.belowCardNumber);
+            }
             setState(() {});
           }),
-          Divider(),
+          const Divider(),
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Text('black listed card holder names (comma separated)'),
+                const Text('black listed card holder names (comma separated)'),
                 TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder()),
+                  decoration: const InputDecoration(border: OutlineInputBorder()),
                   onChanged: (value) => cardHolderNameBlackListedWords = value.split(','),
                   onEditingComplete: () {
                     setState(() {});
@@ -109,7 +111,7 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
   Widget buildCheckBox(String key, bool value, onChanged) {
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -129,21 +131,21 @@ class _OptionConfigureWidgetState extends State<OptionConfigureWidget> {
   Widget buildIntegerEditWidget(String key, int value, onChanged) {
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(key),
             Text(value.toString()),
             IconButton(
-              icon: Icon(Icons.arrow_upward),
+              icon: const Icon(Icons.arrow_upward),
               onPressed: () {
                 onChanged(value + 1);
                 setState(() {});
               },
             ),
             IconButton(
-              icon: Icon(Icons.arrow_downward),
+              icon: const Icon(Icons.arrow_downward),
               onPressed: () {
                 onChanged(max(0, value - 1));
                 setState(() {});

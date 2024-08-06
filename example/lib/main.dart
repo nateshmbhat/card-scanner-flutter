@@ -5,17 +5,19 @@ import 'dart:async';
 import 'package:card_scanner/card_scanner.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   CardDetails? _cardDetails;
-  CardScanOptions scanOptions = CardScanOptions(
+  CardScanOptions scanOptions = const CardScanOptions(
     scanCardHolderName: true,
     // enableDebugLogs: true,
     validCardsToScanBeforeFinishingScan: 5,
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () async {
                   scanCard();
                 },
-                child: Text('scan card'),
+                child: const Text('scan card'),
               ),
               Text('$_cardDetails'),
               Expanded(
