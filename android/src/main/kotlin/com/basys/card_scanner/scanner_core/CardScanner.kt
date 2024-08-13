@@ -56,7 +56,7 @@ class CardScanner(private val scannerOptions: CardScannerOptions, private val on
 
       val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-      val result = recognizer.process(image)
+      recognizer.process(image)
               .addOnSuccessListener { visionText ->
                 if (scanCompleted) return@addOnSuccessListener
                 val cardDetails = singleFrameCardScanner.scanSingleFrame(visionText)
@@ -80,7 +80,7 @@ class CardScanner(private val scannerOptions: CardScannerOptions, private val on
               .addOnFailureListener { e ->
                 debugLog("Error : $e", scannerOptions)
               }
-              .addOnCompleteListener { r ->
+              .addOnCompleteListener {
                 imageProxy.close()
               }
     }

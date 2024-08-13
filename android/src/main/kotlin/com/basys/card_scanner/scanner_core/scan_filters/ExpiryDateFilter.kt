@@ -41,7 +41,7 @@ class ExpiryDateFilter(visionText: Text, scannerOptions: CardScannerOptions, pri
     if (expiryDateResults.size == 1) return expiryDateResults[0];
 
     var mostRecentDateResult = expiryDateResults[0]
-    for ((index, expiryDateResult) in expiryDateResults.subList(1, expiryDateResults.size).withIndex()) {
+    for (expiryDateResult in expiryDateResults.subList(1, expiryDateResults.size)) {
       val currentMostRecent = parseExpiryDate(mostRecentDateResult.expiryDate);
       val newDate = parseExpiryDate(expiryDateResult.expiryDate);
       if (newDate != null) {
