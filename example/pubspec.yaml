@@ -5,7 +5,7 @@ description: "Demonstrates how to use the card_scanner plugin."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=3.4.4 <4.0.0"
+  sdk: ">=3.4.4"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,8 +30,6 @@ dependencies:
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
-  integration_test:
-    sdk: flutter
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
@@ -42,6 +40,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  camera: ^0.10.5+3
 
 flutter_icons:
   android: "launcher_icon"

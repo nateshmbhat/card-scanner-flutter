@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+		<key>NSCameraUsageDescription</key>
+	<string>The camera is used to scan in payment information</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The Microphone is used to scan in payment information</string>
 </dict>
 </plist>
