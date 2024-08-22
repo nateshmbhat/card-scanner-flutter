@@ -5,6 +5,7 @@ name: flutter_publish
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
+  workflow_dispatch:
   release:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -19,7 +20,9 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
-    - uses: k-paxian/dart-package-publisher@v1.2
+    - uses: k-paxian/dart-package-publisher@v1.6
       with:
         credentialJson: ${{ secrets.CREDENTIAL_JSON }}
         skipTests: true
+        format: true
+        
