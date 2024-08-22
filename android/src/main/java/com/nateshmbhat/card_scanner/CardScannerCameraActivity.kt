@@ -26,18 +26,19 @@ import com.nateshmbhat.card_scanner.scanner_core.models.CardDetails
 import com.nateshmbhat.card_scanner.scanner_core.models.CardScannerOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 
 typealias onCardScanned = (cardDetails: CardDetails?) -> Unit
 typealias onCardScanFailed = () -> Unit
 
 class CardScannerCameraActivity : AppCompatActivity() {
-  private var previewUseCase: Preview? = null;
+  private var previewUseCase: Preview? = null
   private var cameraProvider: ProcessCameraProvider? = null
   private var cameraSelector: CameraSelector? = null
   private var textRecognizer: TextRecognizer? = null
   private var analysisUseCase: ImageAnalysis? = null
-  private lateinit var cardScannerOptions: CardScannerOptions
+  private var cardScannerOptions: CardScannerOptions? = null
   private lateinit var cameraExecutor: ExecutorService
   lateinit var animator: ObjectAnimator
   lateinit var scannerLayout: View
@@ -49,12 +50,12 @@ class CardScannerCameraActivity : AppCompatActivity() {
     setContentView(R.layout.card_scanner_camera_activity)
     cardScannerOptions = intent.getParcelableExtra<CardScannerOptions>(CARD_SCAN_OPTIONS)
 
-    scannerLayout = findViewById(R.id.scannerLayout);
-    scannerBar = findViewById(R.id.scannerBar);
+    scannerLayout = findViewById(R.id.scannerLayout)
+    scannerBar = findViewById(R.id.scannerBar)
     backButton = findViewById(R.id.backButton)
-    supportActionBar?.hide();
+    supportActionBar?.hide()
 
-    val vto = scannerLayout.viewTreeObserver;
+    val vto = scannerLayout.viewTreeObserver
     backButton.setOnClickListener {
       finish()
     }
@@ -86,15 +87,10 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   private fun startCamera() {
     val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-    cameraProviderFuture.addListener(Runnable {
-      this.cameraProvider = cameraProviderFuture.get()
-      this.cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
-
-      try {
-        bindAllCameraUseCases()
-      } catch (exc: Exception) {
-        debugLog("Use case binding failed : $exc", cardScannerOptions)
-      }
+    cameraProviderFuture.addListener({
+      cameraProvider = cameraProviderFuture.get()
+      cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+      bindAllCameraUseCases()
     }, ContextCompat.getMainExecutor(this))
   }
 
@@ -125,24 +121,35 @@ class CardScannerCameraActivity : AppCompatActivity() {
   }
 
   private fun bindPreviewUseCase() {
-    if (previewUseCase != null) {
-      cameraProvider?.unbind(previewUseCase)
+    if(cameraProvider == null){
+      return
     }
+
+    if (previewUseCase != null) {
+      cameraProvider!!.unbind(previewUseCase)
+    }
+
     previewUseCase = Preview.Builder().build()
     val previewView = findViewById<PreviewView>(R.id.cameraView)
+
     previewUseCase!!.setSurfaceProvider(previewView.surfaceProvider)
-    cameraProvider?.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, previewUseCase)
+    cameraProvider!!.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, previewUseCase)
   }
 
   private fun bindAnalysisUseCase() {
     if (cameraProvider == null) {
       return
     }
+
     if (analysisUseCase != null) {
-      cameraProvider?.unbind(analysisUseCase)
+      cameraProvider!!.unbind(analysisUseCase)
     }
-    textRecognizer?.close()
-    textRecognizer = TextRecognition.getClient()
+
+    if(textRecognizer != null){
+      textRecognizer!!.close()
+    }
+
+    textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     debugLog("card scanner options : $cardScannerOptions", cardScannerOptions)
     val analysisUseCase = ImageAnalysis.Builder().build()
@@ -153,7 +160,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
                 val returnIntent: Intent = Intent()
                 returnIntent.putExtra(SCAN_RESULT, cardDetails)
                 setResult(Activity.RESULT_OK, returnIntent)
-                this.finish()
+                finish()
               }, onCardScanFailed = {
                 onBackPressed()
               }))
@@ -176,12 +183,12 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   override fun onPause() {
     super.onPause()
-    textRecognizer?.close()
+    textRecognizer!!.close()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    textRecognizer?.close()
+    textRecognizer!!.close()
   }
 
   override fun onBackPressed() {
