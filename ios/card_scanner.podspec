@@ -19,10 +19,10 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/**/*.h'
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMLKit/TextRecognition'
+  s.dependency 'GoogleMLKit/TextRecognition', '~> 6.0.0'
   s.dependency 'GoogleUtilities/UserDefaults'
-  s.platform = :ios, '12.0'
-  s.ios.deployment_target = '12.0'
+  s.platform = :ios, '16.0'
+  s.ios.deployment_target = '16.0'
   s.static_framework = true
   s.swift_version = '5.0'
 

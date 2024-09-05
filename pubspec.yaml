@@ -1,6 +1,6 @@
 name: card_scanner
 description: "A new Flutter plugin project."
-version: 0.0.3
+version: 0.0.3+1
 homepage: https://github.com/jackson-chandler-basys/card-scanner-flutter?tab=readme-ov-file
 
 environment:
