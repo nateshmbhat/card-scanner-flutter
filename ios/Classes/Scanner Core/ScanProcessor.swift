@@ -133,10 +133,12 @@ extension ScanProcessor: CameraDelegate {
 
         textRecognizer.process(visionImage) { recognizedText, error in
             if let error = error {
+                print("Error recognizing text")
                 completion(nil)
             } else if let recognizedText = recognizedText {
                 completion(recognizedText)
             } else {
+                print("No text recognized.")
                 completion(nil)
             }
         }
