@@ -12,7 +12,7 @@ import MLKitTextRecognition
 import MLKitVision
 
 protocol CameraDelegate {
-    func camera(_ camera: CameraViewController, didScan scanResult: Text)
+    func camera(_ camera: CameraViewController, didScan scanResult: Text, sampleBuffer: CMSampleBuffer)
     func cameraDidStopScanning(_ camera: CameraViewController)
 }
 
@@ -345,7 +345,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             return
         }
         
-        cameraDelegate?.camera(self, didScan: result)
+        cameraDelegate?.camera(self, didScan: result, sampleBuffer: sampleBuffer)
     }
 }
 
