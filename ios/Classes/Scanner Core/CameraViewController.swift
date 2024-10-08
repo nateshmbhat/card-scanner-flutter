@@ -30,10 +30,17 @@ class CameraViewController: UIViewController {
     var torchOn: Bool = false
     
     var cameraOrientation: CameraOrientation = .portrait
+
+    var previewImageView: UIImageView!
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         gainCameraPermission()
+
+        previewImageView = UIImageView(frame: CGRect(x: 20, y: 50, width: 300, height: 200))
+        previewImageView.contentMode = .scaleAspectFit
+        previewImageView.backgroundColor = .black // Optional: For contrast
+        view.addSubview(previewImageView)
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -90,7 +97,7 @@ class CameraViewController: UIViewController {
         
         addInputDeviceToSession()
         
-        createAndAddPreviewLayer()
+        //createAndAddPreviewLayer()
         
         addOutputToInputDevice()
         
@@ -122,20 +129,20 @@ class CameraViewController: UIViewController {
         }
     }
     
-    func addInputDeviceToSession() {
+    func addInputDeviceToSession() { 
         captureSession.addInput(input)
     }
     
-    func createAndAddPreviewLayer() {
-        DispatchQueue.main.async {
-            let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-            previewLayer.frame = UIScreen.main.bounds
-            previewLayer.videoGravity = .resizeAspectFill
-            previewLayer.isOpaque = true
-            self.view.layer.isOpaque = true
-            self.view.layer.addSublayer(previewLayer)
-        }
-    }
+    // func createAndAddPreviewLayer() {
+    //     DispatchQueue.main.async {
+    //         let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+    //         previewLayer.frame = UIScreen.main.bounds
+    //         previewLayer.videoGravity = .resizeAspectFill
+    //         previewLayer.isOpaque = true
+    //         self.view.layer.isOpaque = true
+    //         self.view.layer.addSublayer(previewLayer)
+    //     }
+    // }
     
     func addOutputToInputDevice() {
         let dataOutput = AVCaptureVideoDataOutput()
@@ -328,6 +335,26 @@ class CameraViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+
+    // func extractImageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage? {
+
+    //     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+    //         print("getImagebuffer fail")
+    //         return nil
+    //     }
+        
+    //     let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+        
+    //     let context = CIContext()
+    //     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+    //         print("Error: Unable to create CGImage from CIImage")
+    //         return nil
+    //     }
+        
+    //     let uiImage = UIImage(cgImage: cgImage) 
+
+    //     return uiImage
+    // }
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -336,13 +363,19 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         // .right = portrait mode
         // .up = landscapeRight
-        visionImage.orientation = orientationForScanning
+        visionImage.orientation = .up
         
         guard let result = try? textRecognizer.results(in: visionImage) else {
             #if DEBUG
             NSLog("Text Recognizer", "Something went wrong while setting up TextRecognizer")
             #endif
             return
+        }
+
+        DispatchQueue.main.async {
+            if let frameImage = self.extractImageFromSampleBuffer(sampleBuffer: sampleBuffer) {
+                self.previewImageView.image = frameImage
+            }
         }
         
         cameraDelegate?.camera(self, didScan: result, sampleBuffer: sampleBuffer)
@@ -385,6 +418,42 @@ extension CameraViewController {
         @unknown default:
             return .up
         }
+    }
+
+    func imageOrientationFromDeviceOrientation() -> UIImage.Orientation {
+    let deviceOrientation = UIDevice.current.orientation
+    let isUsingFrontCamera = device.position == .front
+    
+    switch deviceOrientation {
+    case .portrait:
+        return isUsingFrontCamera ? .leftMirrored : .right
+    case .landscapeLeft:
+        return isUsingFrontCamera ? .downMirrored : .up
+    case .landscapeRight:
+        return isUsingFrontCamera ? .upMirrored : .down
+    case .portraitUpsideDown:
+        return isUsingFrontCamera ? .rightMirrored : .left
+    default:
+        return .right // Default to portrait mode
+    }
+}
+
+    func extractImageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage? {
+        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            return nil
+        }
+
+        let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+        let context = CIContext()
+
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            print("Error: Unable to create CGImage from CIImage")
+            return nil
+        }
+
+        let imageOrientation = imageOrientationFromDeviceOrientation()
+
+        return UIImage(cgImage: cgImage, scale: 1.0, orientation: imageOrientation)
     }
 }
 
