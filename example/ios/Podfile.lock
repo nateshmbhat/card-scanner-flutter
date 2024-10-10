@@ -1,7 +1,7 @@
 PODS:
   - camera_avfoundation (0.0.1):
     - Flutter
-  - card_scanner (0.0.3-1):
+  - card_scanner (0.0.3-2):
     - Flutter
     - GoogleMLKit/TextRecognition (~> 6.0.0)
     - GoogleUtilities/UserDefaults
@@ -92,7 +92,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
-  card_scanner: 625982d53adb3c8367ca9ef8637cb5c33661cf98
+  card_scanner: 9741b4efc3a61144964c72253a421df36b350ad8
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMLKit: 97ac7af399057e99182ee8edfa8249e3226a4065

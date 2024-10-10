@@ -8,6 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.basys.card_scanner.SingleFrameCardScanner
 import com.basys.card_scanner.logger.debugLog
 import com.basys.card_scanner.onCardScanFailed

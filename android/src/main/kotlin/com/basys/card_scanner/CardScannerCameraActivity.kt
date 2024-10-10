@@ -26,7 +26,6 @@ import com.basys.card_scanner.scanner_core.CardScanner
 import com.basys.card_scanner.scanner_core.models.CardDetails
 import com.basys.card_scanner.scanner_core.models.CardScannerOptions
 import com.google.mlkit.vision.text.TextRecognizerOptionsInterface
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -50,7 +49,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
    override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.card_scanner_camera_activity)
-    cardScannerOptions = intent.getParcelableExtra<CardScannerOptions>(CARD_SCAN_OPTIONS)!!
+    cardScannerOptions = intent.getParcelableExtra<CardScannerOptions>(CARD_SCAN_OPTIONS)
 
     scannerLayout = findViewById(R.id.scannerLayout);
     scannerBar = findViewById(R.id.scannerBar);
