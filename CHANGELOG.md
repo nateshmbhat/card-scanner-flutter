@@ -1,5 +1,10 @@
 # Changelog after fork
 
+## 0.0.4
+
+- Removed code smells
+- Fixed small bugs
+
 ## 0.0.1
 
 - Upgraded all the gradle files

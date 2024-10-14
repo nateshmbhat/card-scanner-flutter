@@ -1,9 +1,8 @@
-package com.basys.card_scanner;
+package com.basys.card_scanner
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.NonNull
 import com.basys.card_scanner.scanner_core.models.CardDetails
 import com.basys.card_scanner.scanner_core.models.CardScannerOptions
 import io.flutter.embedding.engine.plugins.FlutterPlugin

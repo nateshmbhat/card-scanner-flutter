@@ -7,7 +7,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -25,7 +24,7 @@ import com.basys.card_scanner.logger.debugLog
 import com.basys.card_scanner.scanner_core.CardScanner
 import com.basys.card_scanner.scanner_core.models.CardDetails
 import com.basys.card_scanner.scanner_core.models.CardScannerOptions
-import com.google.mlkit.vision.text.TextRecognizerOptionsInterface
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -34,7 +33,7 @@ typealias onCardScanned = (cardDetails: CardDetails?) -> Unit
 typealias onCardScanFailed = () -> Unit
 
 class CardScannerCameraActivity : AppCompatActivity() {
-  private var previewUseCase: Preview? = null;
+  private var previewUseCase: Preview? = null
   private var cameraProvider: ProcessCameraProvider? = null
   private var cameraSelector: CameraSelector? = null
   private var textRecognizer: TextRecognizer? = null
@@ -44,19 +43,19 @@ class CardScannerCameraActivity : AppCompatActivity() {
   lateinit var animator: ObjectAnimator
   lateinit var scannerLayout: View
   lateinit var scannerBar: View
-  lateinit var backButton: View
+  private lateinit var backButton: View
 
    override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.card_scanner_camera_activity)
-    cardScannerOptions = intent.getParcelableExtra<CardScannerOptions>(CARD_SCAN_OPTIONS)
+    cardScannerOptions = intent.getParcelableExtra(CARD_SCAN_OPTIONS)!!
 
-    scannerLayout = findViewById(R.id.scannerLayout);
-    scannerBar = findViewById(R.id.scannerBar);
+    scannerLayout = findViewById(R.id.scannerLayout)
+    scannerBar = findViewById(R.id.scannerBar)
     backButton = findViewById(R.id.backButton)
-    supportActionBar?.hide();
+    supportActionBar?.hide()
 
-    val vto = scannerLayout.viewTreeObserver;
+    val vto = scannerLayout.viewTreeObserver
     backButton.setOnClickListener {
       finish()
     }
@@ -88,7 +87,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   private fun startCamera() {
     val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-    cameraProviderFuture.addListener(Runnable {
+    cameraProviderFuture.addListener({
       this.cameraProvider = cameraProviderFuture.get()
       this.cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
 
@@ -153,7 +152,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
               it.setAnalyzer(cameraExecutor, CardScanner(cardScannerOptions, { cardDetails ->
                 debugLog("Card recognized : $cardDetails", cardScannerOptions)
 
-                val returnIntent: Intent = Intent()
+                val returnIntent = Intent()
                 returnIntent.putExtra(SCAN_RESULT, cardDetails)
                 setResult(Activity.RESULT_OK, returnIntent)
                 this.finish()
@@ -165,7 +164,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
   }
 
   companion object {
-    private const val TAG = "CameraXBasic"
+//    private const val TAG = "CameraXBasic"
     private const val REQUEST_CODE_PERMISSIONS = 10
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     const val SCAN_RESULT: String = "scan_result"

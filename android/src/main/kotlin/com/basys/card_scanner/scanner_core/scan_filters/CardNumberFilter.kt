@@ -10,15 +10,15 @@ import com.basys.card_scanner.scanner_core.models.ScanFilter
 class CardNumberFilter(visionText: Text, scannerOptions: CardScannerOptions) : ScanFilter(visionText, scannerOptions) {
   private val cardNumberRegex: Regex = Regex(CardScannerRegexps.cardNumberRegex, RegexOption.MULTILINE)
 
-  fun _isValidCardNumber(cardNumber: String): Boolean {
-    return true;
+  private fun isValidCardNumber(cardNumber: String): Boolean {
+    return true
 //    if (scannerOptions.customBinNumbersToScan?.isEmpty ?? true) {
-//    return true;
+//    return true
 //  } else {
 //    for (var binNumber in scannerOptions.customBinNumbersToScan) {
-//      if (cardNumber.startsWith(binNumber.trim()?.replaceAll(' ', ''))) return true;
+//      if (cardNumber.startsWith(binNumber.trim()?.replaceAll(' ', ''))) return true
 //    }
-//    return false;
+//    return false
 //  }
   }
 
@@ -26,17 +26,17 @@ class CardNumberFilter(visionText: Text, scannerOptions: CardScannerOptions) : S
     for ((index, block) in visionText.textBlocks.withIndex()) {
       if (cardNumberRegex.containsMatchIn(block.text)) {
         val cardNumber = cardNumberRegex.find(block.text)!!.value.trim().replace(Regex("\\s+"), "")
-        if (!_isValidCardNumber(cardNumber)) continue;
-        debugLog("card number = $cardNumber", scannerOptions);
+        if (!isValidCardNumber(cardNumber)) continue
+        debugLog("card number = $cardNumber", scannerOptions)
         if (scannerOptions.enableLuhnCheck && !checkLuhnAlgorithm(cardNumber)) {
-          debugLog("Luhn check failed !", scannerOptions);
-          continue;
+          debugLog("Luhn check failed !", scannerOptions)
+          continue
         }
         return CardNumberScanResult(
-                textBlockIndex = index, textBlock = block, cardNumber = cardNumber, visionText = visionText);
+                textBlockIndex = index, textBlock = block, cardNumber = cardNumber, visionText = visionText)
       }
     }
-    return null;
+    return null
   }
 
   ///[cleanedCardNumber] is card number without any extra space and with only the digits of the card

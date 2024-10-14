@@ -2,9 +2,9 @@ package com.basys.card_scanner.scanner_core.constants
 
 abstract class CardScannerRegexps {
   companion object {
-    val cardNumberRegex = "^(\\s*\\d\\s*){16}\$";
-    val expiryDateRegex = "(0[1-9]|1[0-2])/([0-9]{2})";
-    val cardHolderName = "^ *(([A-Z.]+ {0,2}){1,8}) *\$"; // A line containing name has : minimum 1 word and maximum 8 words
+    const val cardNumberRegex = "^(\\s*\\d\\s*){16}\$"
+    const val expiryDateRegex = "(0[1-9]|1[0-2])/([0-9]{2})"
+    const val cardHolderName = "^ *(([A-Z.]+ {0,2}){1,8}) *\$" // A line containing name has : minimum 1 word and maximum 8 words
   }
 }
 
@@ -12,7 +12,7 @@ abstract class CardScannerRegexps {
 abstract class CardHolderNameConstants {
   companion object {
     val defaultBlackListedWords =
-            setOf<String>(
+            setOf(
                     "valid",
                     "doll",
                     "through",
@@ -81,5 +81,5 @@ abstract class CardHolderNameConstants {
                     "valid from valid till",
                     "member since",
                     "prepaid")
-  };
+  }
 }
