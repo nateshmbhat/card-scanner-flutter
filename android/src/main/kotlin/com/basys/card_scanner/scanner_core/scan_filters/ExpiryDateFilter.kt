@@ -9,48 +9,48 @@ import kotlin.math.min
 
 class ExpiryDateFilter(visionText: Text, scannerOptions: CardScannerOptions, private val cardNumberScanResult: CardNumberScanResult) : ScanFilter(visionText, scannerOptions) {
   private val expiryDateRegex: Regex = Regex(CardScannerRegexps.expiryDateRegex, RegexOption.MULTILINE)
-  val _maxBlocksBelowCardNumberToSearchForExpiryDate = 4;
-  val _expiryDateFormat = "MM/yy";
+  private val _maxBlocksBelowCardNumberToSearchForExpiryDate = 4
+  private val _expiryDateFormat = "MM/yy"
 
   override fun filter(): ExpiryDateScanResult? {
-    if (cardNumberScanResult.cardNumber.isEmpty()) return null;
-    if (!scannerOptions.scanExpiryDate) return null;
+    if (cardNumberScanResult.cardNumber.isEmpty()) return null
+    if (!scannerOptions.scanExpiryDate) return null
 
     val scanResults: MutableList<ExpiryDateScanResult> = mutableListOf()
     val maxTextBlockIndexToSearchExpiryDate = min(
-            cardNumberScanResult.textBlockIndex + _maxBlocksBelowCardNumberToSearchForExpiryDate, visionText.textBlocks.size - 1);
+            cardNumberScanResult.textBlockIndex + _maxBlocksBelowCardNumberToSearchForExpiryDate, visionText.textBlocks.size - 1)
 
     for (index in cardNumberScanResult.textBlockIndex..maxTextBlockIndexToSearchExpiryDate) {
       val block = visionText.textBlocks[index]
-      if (!expiryDateRegex.containsMatchIn(block.text)) continue;
+      if (!expiryDateRegex.containsMatchIn(block.text)) continue
       for (match in expiryDateRegex.findAll(block.text)) {
         val expiryDate = match.groupValues[0].trim().replace(Regex("\\s+"), "")
         if (isValidExpiryDate(expiryDate)) {
           scanResults.add(ExpiryDateScanResult(
-                  textBlockIndex = index, textBlock = block, expiryDate = expiryDate, visionText = visionText));
+                  textBlockIndex = index, textBlock = block, expiryDate = expiryDate, visionText = visionText))
         }
       }
-      if (scanResults.size > 2) break;
+      if (scanResults.size > 2) break
     }
 
-    if (scanResults.isEmpty()) return null;
-    return chooseMostRecentDate(scanResults);
+    if (scanResults.isEmpty()) return null
+    return chooseMostRecentDate(scanResults)
   }
 
   private fun chooseMostRecentDate(expiryDateResults: List<ExpiryDateScanResult>): ExpiryDateScanResult {
-    if (expiryDateResults.size == 1) return expiryDateResults[0];
+    if (expiryDateResults.size == 1) return expiryDateResults[0]
 
     var mostRecentDateResult = expiryDateResults[0]
     for (expiryDateResult in expiryDateResults.subList(1, expiryDateResults.size)) {
-      val currentMostRecent = parseExpiryDate(mostRecentDateResult.expiryDate);
-      val newDate = parseExpiryDate(expiryDateResult.expiryDate);
+      val currentMostRecent = parseExpiryDate(mostRecentDateResult.expiryDate)
+      val newDate = parseExpiryDate(expiryDateResult.expiryDate)
       if (newDate != null) {
         if (newDate.after(currentMostRecent)) {
-          mostRecentDateResult = expiryDateResult;
+          mostRecentDateResult = expiryDateResult
         }
       }
     }
-    return mostRecentDateResult;
+    return mostRecentDateResult
   }
 
   private fun isValidExpiryDate(expiryDate: String): Boolean {
@@ -58,7 +58,7 @@ class ExpiryDateFilter(visionText: Text, scannerOptions: CardScannerOptions, pri
     val currentDateTime = SimpleDateFormat(_expiryDateFormat, Locale.US).parse(
             SimpleDateFormat(_expiryDateFormat, Locale.US).format(Date()))
     return if (scannerOptions.considerPastDatesInExpiryDateScan) {
-      true;
+      true
     } else {
       expiryDateTime?.after(currentDateTime) ?: false
     }

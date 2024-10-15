@@ -8,6 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.basys.card_scanner.SingleFrameCardScanner
 import com.basys.card_scanner.logger.debugLog
 import com.basys.card_scanner.onCardScanFailed
@@ -15,13 +16,11 @@ import com.basys.card_scanner.onCardScanned
 import com.basys.card_scanner.scanner_core.models.CardDetails
 import com.basys.card_scanner.scanner_core.models.CardScannerOptions
 import com.basys.card_scanner.scanner_core.optimizer.CardDetailsScanOptimizer
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-
 
 class CardScanner(private val scannerOptions: CardScannerOptions, private val onCardScanned: onCardScanned, private val onCardScanFailed: onCardScanFailed) : ImageAnalysis.Analyzer {
-  val singleFrameCardScanner: SingleFrameCardScanner = SingleFrameCardScanner(scannerOptions)
+  private val singleFrameCardScanner: SingleFrameCardScanner = SingleFrameCardScanner(scannerOptions)
   val cardDetailsScanOptimizer: CardDetailsScanOptimizer = CardDetailsScanOptimizer(scannerOptions)
-  var scanCompleted: Boolean = false
+  private var scanCompleted: Boolean = false
 
   init {
     if (scannerOptions.cardScannerTimeOut > 0) {
@@ -29,14 +28,14 @@ class CardScanner(private val scannerOptions: CardScannerOptions, private val on
         override fun onTick(millisUntilFinished: Long) {}
 
         override fun onFinish() {
-          debugLog("Card scanner timeout reached", scannerOptions);
+          debugLog("Card scanner timeout reached", scannerOptions)
           val cardDetails = cardDetailsScanOptimizer.getOptimalCardDetails()
           if (cardDetails != null) {
             finishCardScanning(cardDetails)
           } else {
             onCardScanFailed()
           }
-          debugLog("Finishing card scan with card details : ${cardDetails}", scannerOptions);
+          debugLog("Finishing card scan with card details : $cardDetails", scannerOptions)
         }
       }
       timer.start()
@@ -60,7 +59,7 @@ class CardScanner(private val scannerOptions: CardScannerOptions, private val on
               .addOnSuccessListener { visionText ->
                 if (scanCompleted) return@addOnSuccessListener
                 val cardDetails = singleFrameCardScanner.scanSingleFrame(visionText)
-                        ?: return@addOnSuccessListener;
+                        ?: return@addOnSuccessListener
 
                 if (scannerOptions.enableDebugLogs) {
                   debugLog("----------------------------------------------------", scannerOptions)

@@ -1,6 +1,6 @@
 name: card_scanner
 description: "A new Flutter plugin project."
-version: 0.0.3+2
+version: 0.0.4+3
 homepage: https://github.com/jackson-chandler-basys/card-scanner-flutter?tab=readme-ov-file
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

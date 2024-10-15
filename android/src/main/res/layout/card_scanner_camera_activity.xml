@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,12 +22,12 @@
 
             <Button
                 android:id="@+id/backButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="28dp"
-                android:layout_width="20dp"
-                android:background="@drawable/ic_back_arrow"
-                android:layout_height="17dp"
-                android:textSize="24sp"/>
+                android:background="@drawable/back_arrow"
+                android:textSize="24sp" />
 
 
         </RelativeLayout>
@@ -75,16 +76,16 @@
             android:layout_weight="1"
             android:background="@color/semitransparent" >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:lineSpacingExtra="6sp"
-            android:layout_centerInParent="true"
-            android:text="Scan your card to proceed"
-            android:textAlignment="center"
-            android:textColor="#f0f0f5"
-            android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:lineSpacingExtra="6sp"
+                android:text="Scan card to proceed"
+                android:textAlignment="center"
+                android:textColor="#f0f0f5"
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
