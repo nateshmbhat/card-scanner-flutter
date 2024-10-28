@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import MLKitTextRecognition
 import MLKitVision
+import Flutter
 
 protocol CameraDelegate {
     func camera(_ camera: CameraViewController, didScan scanResult: Text, sampleBuffer: CMSampleBuffer)
@@ -227,6 +228,15 @@ class CameraViewController: UIViewController {
             self.view.addSubview(self.flashButton)
         }
     }
+
+    func loadFlutterAsset(named assetName: String) -> UIImage? {
+        let flutterAssetKey = FlutterDartProject.lookupKey(forAsset: assetName)
+        guard let path = Bundle.main.path(forResource: flutterAssetKey, ofType: nil) else {
+            return nil
+        }
+        return UIImage(contentsOfFile: path)
+    }
+
     
     lazy var flashButton: UIButton = {
         let device = AVCaptureDevice.default(for: AVMediaType.video)!
@@ -241,7 +251,7 @@ class CameraViewController: UIViewController {
         
         flashBtn.setImage(
             UIImage(
-                named: device.isTorchOn ? "flashOn" : "flashOff"
+                named: device.isTorchOn ? "FlashOn" : "FlashOff"
             ),
             for: .normal
         )
@@ -271,10 +281,17 @@ class CameraViewController: UIViewController {
                 height: 17 + 10
             )
         )
+
+        //  if let image = loadFlutterAsset(named: "ios/Assets/Images/backButton.png") {
+        //     backBtn.setImage(image, for: .normal)
+        //     print("SUccESS!*9w")
+        //     } else {
+        //         print("Error: backButton.png not found in Flutter assets")
+        //     }
         
         backBtn.setImage(
             UIImage(
-                named: "backButton"
+                named: "BackButton"
             ),
             for: .normal
         )
@@ -303,7 +320,7 @@ class CameraViewController: UIViewController {
         DispatchQueue.main.async {
             device.toggleTorch()
             self.flashButton.setImage(
-                UIImage(named: device.isTorchOn ? "flashOn" : "flashOff"),
+                UIImage(named: device.isTorchOn ? "FlashOn" : "FlashOff"),
                 for: .normal
             )
         }
@@ -316,10 +333,10 @@ class CameraViewController: UIViewController {
     }
     
     func addAnimatingScanLine() {
-        
-        guard let image = UIImage(named: "blueScanLine", in: Bundle(for: SwiftCardScannerPlugin.self), compatibleWith: nil) else {
-            return
-        }
+        guard let image = UIImage(named: "BlueScanLine")
+            else {
+                return
+            }
         
         let blueScanLineImage = UIImageView(image: image)
         
