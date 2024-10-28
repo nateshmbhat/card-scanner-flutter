@@ -31,17 +31,36 @@ class CameraViewController: UIViewController {
     
     var cameraOrientation: CameraOrientation = .portrait
 
-    var previewImageView: UIImageView!
+
+    //Code for testing filters
+    // var preprocessedImageView: UIImageView!
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         gainCameraPermission()
 
-        previewImageView = UIImageView(frame: CGRect(x: 20, y: 50, width: 300, height: 200))
-        previewImageView.contentMode = .scaleAspectFit
-        previewImageView.backgroundColor = .black // Optional: For contrast
-        view.addSubview(previewImageView)
+        //Code for testing filters
+        //setupPreprocessedImageView()
     }
+
+    //Code for testing filters
+    // private func setupPreprocessedImageView() {
+    //     preprocessedImageView = UIImageView(frame: CGRect(x: -30, y: 100, width: 600, height: 400))
+    //     preprocessedImageView.contentMode = .scaleAspectFit
+    //     preprocessedImageView.backgroundColor = .clear // Transparent background
+    //     preprocessedImageView.layer.borderColor = UIColor.white.cgColor
+    //     preprocessedImageView.layer.borderWidth = 1.0
+    //     view.addSubview(preprocessedImageView)
+    //     view.bringSubviewToFront(preprocessedImageView)
+    // }
+
+    //Code for testing filters
+    // func updatePreprocessedImage(_ image: UIImage) {
+    //     DispatchQueue.main.async {
+    //         self.preprocessedImageView.image = image
+    //         print("Preprocessed image set to preview")
+    //     }
+    // }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -97,7 +116,7 @@ class CameraViewController: UIViewController {
         
         addInputDeviceToSession()
         
-        //createAndAddPreviewLayer()
+        createAndAddPreviewLayer()
         
         addOutputToInputDevice()
         
@@ -133,16 +152,16 @@ class CameraViewController: UIViewController {
         captureSession.addInput(input)
     }
     
-    // func createAndAddPreviewLayer() {
-    //     DispatchQueue.main.async {
-    //         let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-    //         previewLayer.frame = UIScreen.main.bounds
-    //         previewLayer.videoGravity = .resizeAspectFill
-    //         previewLayer.isOpaque = true
-    //         self.view.layer.isOpaque = true
-    //         self.view.layer.addSublayer(previewLayer)
-    //     }
-    // }
+    func createAndAddPreviewLayer() {
+        DispatchQueue.main.async {
+            let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            previewLayer.frame = UIScreen.main.bounds
+            previewLayer.videoGravity = .resizeAspectFill
+            previewLayer.isOpaque = true
+            self.view.layer.isOpaque = true
+            self.view.layer.addSublayer(previewLayer)       
+        }
+    }
     
     func addOutputToInputDevice() {
         let dataOutput = AVCaptureVideoDataOutput()
@@ -355,27 +374,27 @@ class CameraViewController: UIViewController {
 
     //     return uiImage
     // }
+
+    
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if connection.isVideoOrientationSupported {
+        connection.videoOrientation = .portrait
+        }
+
         let visionImage = VisionImage(buffer: sampleBuffer)
         
         // .right = portrait mode
         // .up = landscapeRight
-        visionImage.orientation = .up
+        visionImage.orientation = .right
         
         guard let result = try? textRecognizer.results(in: visionImage) else {
             #if DEBUG
             NSLog("Text Recognizer", "Something went wrong while setting up TextRecognizer")
             #endif
             return
-        }
-
-        DispatchQueue.main.async {
-            if let frameImage = self.extractImageFromSampleBuffer(sampleBuffer: sampleBuffer) {
-                self.previewImageView.image = frameImage
-            }
         }
         
         cameraDelegate?.camera(self, didScan: result, sampleBuffer: sampleBuffer)
@@ -438,6 +457,7 @@ extension CameraViewController {
     }
 }
 
+    
     func extractImageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage? {
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return nil
@@ -453,7 +473,7 @@ extension CameraViewController {
 
         let imageOrientation = imageOrientationFromDeviceOrientation()
 
-        return UIImage(cgImage: cgImage, scale: 1.0, orientation: imageOrientation)
+        return UIImage(cgImage: cgImage, scale: 1.0, orientation: .right)
     }
 }
 

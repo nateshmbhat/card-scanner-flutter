@@ -25,6 +25,7 @@ public class ScanProcessor {
     var singleFrameCardScanner: SingleFrameCardScanner
     var cardDetailsScanOptimizer: CardDetailsScanOptimizer
     var cardScanOptions: CardScannerOptions
+    var cameraViewController: CameraViewController?
     
     init(withOptions cardScanOptions: CardScannerOptions) {
         self.cardScanOptions = cardScanOptions
@@ -33,9 +34,9 @@ public class ScanProcessor {
     }
     
     func startScanning() {
-        let cameraViewController: CameraViewController = makeCameraViewController()
+        cameraViewController = makeCameraViewController()
         UIApplication.shared.keyWindow?.rootViewController?.present(
-            cameraViewController,
+            cameraViewController!,
             animated: true,
             completion: nil
         )
@@ -59,10 +60,6 @@ extension ScanProcessor: CameraDelegate {
             print("extract image error")
             return
         }
-
-    //     DispatchQueue.main.async {
-    //     preview.image = frameImage
-    // }
 
         preprocessImage(frameImage) { preprocessedText in
             guard let preprocessedText = preprocessedText else {
@@ -99,13 +96,10 @@ extension ScanProcessor: CameraDelegate {
             completion(nil)
             return
         }
-        
-        //Convert to Grayscale
+
         let grayscaleFilter = CIFilter(name: "CIColorControls")
         grayscaleFilter?.setValue(ciImage, forKey: kCIInputImageKey)
         grayscaleFilter?.setValue(0.0, forKey: kCIInputSaturationKey)
-        //grayscaleFilter?.setValue(0.1, forKey: kCIInputBrightnessKey)  // Slightly increase brightness to lighten darker background
-        //grayscaleFilter?.setValue(0.95, forKey: kCIInputContrastKey)
         
         guard let grayscaleImage = grayscaleFilter?.outputImage else {
             print("grayscale fail")
@@ -113,74 +107,19 @@ extension ScanProcessor: CameraDelegate {
             return
         }
 
-        // let noiseReductionFilter = CIFilter(name: "CINoiseReduction")
-        // noiseReductionFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-        // noiseReductionFilter?.setValue(0.02, forKey: "inputNoiseLevel")  // Reduce noise without losing detail
-        // noiseReductionFilter?.setValue(0.4, forKey: "inputSharpness")
+        let sharpenLuminanceFilter = CIFilter(name: "CISharpenLuminance")
+        sharpenLuminanceFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
+        sharpenLuminanceFilter?.setValue(0.4, forKey: "inputSharpness")
 
-        // guard let denoisedImage = noiseReductionFilter?.outputImage else {
-        //     print("noise reduction fail")
-        //     completion(nil)
-        //     return
-        // }
-        
-        //Enhance Contrast
-        // let contrastFilter = CIFilter(name: "CIColorControls")
-        // contrastFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-        // contrastFilter?.setValue(0.9, forKey: kCIInputContrastKey) // Increase contrast
+        guard let sharpenLuminanceImage = sharpenLuminanceFilter?.outputImage else {
+            print("sharpen luminance fail")
+            completion(nil)
+            return
+        }
 
-        // guard let contrastEnhancedImage = contrastFilter?.outputImage else {
-        //     print("contrast fail")
-        //     completion(nil)
-        //     return
-        // }
-
-        // Edge Detection
-        // let edgeDetectionFilter = CIFilter(name: "CIEdges")
-        // edgeDetectionFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-        // edgeDetectionFilter?.setValue(1.1, forKey: kCIInputIntensityKey) // Edge intensity
-        
-        // guard let edgeDetectedImage = edgeDetectionFilter?.outputImage else {
-        //     print("grayscale fail")
-        //     completion(nil)
-        //     return
-        // }
-
-        // Adaptive Thresholding
-        // let thresholdFilter = CIFilter(name: "CIThresholdToZero")
-        // thresholdFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-
-        // guard let thresholdedImage = thresholdFilter?.outputImage else {
-        //     print("thresholding fail")
-        //     completion(nil)
-        //     return
-        // }
-
-        // let blurFilter = CIFilter(name: "CIGaussianBlur")
-        // blurFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-        // blurFilter?.setValue(1.0, forKey: kCIInputRadiusKey) // You can adjust the radius
-
-        // guard let blurredImage = blurFilter?.outputImage else {
-        //     print("blurring fail")
-        //     completion(nil)
-        //     return
-        // }
-
-        // let unsharpMaskFilter = CIFilter(name: "CIUnsharpMask")
-        // unsharpMaskFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-        // unsharpMaskFilter?.setValue(1.5, forKey: kCIInputIntensityKey) // Intensity of sharpening
-        // unsharpMaskFilter?.setValue(1.0, forKey: kCIInputRadiusKey) // Adjust the radius
-
-        // guard let sharpenedImage = unsharpMaskFilter?.outputImage else {
-        //     print("sharpening fail")
-        //     completion(nil)
-        //     return
-        // }
-        
         let highlightShadowFilter = CIFilter(name: "CIHighlightShadowAdjust")
-        highlightShadowFilter?.setValue(grayscaleImage, forKey: kCIInputImageKey)
-        highlightShadowFilter?.setValue(0.8, forKey: "inputHighlightAmount")
-        highlightShadowFilter?.setValue(1.0, forKey: "inputShadowAmount")
+        highlightShadowFilter?.setValue(sharpenLuminanceImage, forKey: kCIInputImageKey)
+        highlightShadowFilter?.setValue(1.0, forKey: "inputHighlightAmount")
 
         guard let balancedImage = highlightShadowFilter?.outputImage else {
             print("lighting adjustment fail")
@@ -188,14 +127,48 @@ extension ScanProcessor: CameraDelegate {
             return
         }
 
+        let exposureAdjustFilter = CIFilter(name: "CIExposureAdjust")
+        exposureAdjustFilter?.setValue(balancedImage, forKey: kCIInputImageKey)
+        exposureAdjustFilter?.setValue(0.5, forKey: "inputEV")
+
+        guard let exposureAdjustImage = exposureAdjustFilter?.outputImage else {
+            print("exposure adjust fail")
+            completion(nil)
+            return
+        }
+
+        let vignetteFilter = CIFilter(name: "CIVignette")
+        vignetteFilter?.setValue(exposureAdjustImage, forKey: kCIInputImageKey)
+        vignetteFilter?.setValue(1.0, forKey: "inputRadius")
+
+        guard let vignetteImage = vignetteFilter?.outputImage else {
+            print("vignette fail")
+            completion(nil)
+            return
+        }
+
+        let unsharpMaskFilter = CIFilter(name: "CIUnsharpMask")
+        unsharpMaskFilter?.setValue(vignetteImage, forKey: kCIInputImageKey)
+        unsharpMaskFilter?.setValue(2.5, forKey: "inputRadius")
+        unsharpMaskFilter?.setValue(0.5, forKey: "inputIntensity")
+
+        guard let sharpenedImage = unsharpMaskFilter?.outputImage else {
+            print("sharpening fail")
+            completion(nil)
+            return
+        }
+
         let context = CIContext(options: nil)
-        guard let cgImage = context.createCGImage(balancedImage, from: grayscaleImage.extent) else {
+        guard let cgImage = context.createCGImage(sharpenedImage, from: sharpenedImage.extent) else {
             print("cgimage congtext fail")
             completion(nil)
             return
         }
 
-         let preprocessedUIImage = UIImage(cgImage: cgImage)
+        let preprocessedUIImage = UIImage(cgImage: cgImage)
+
+        //Code for testing filters
+        //cameraViewController!.updatePreprocessedImage(preprocessedUIImage)
     
         let visionImage = VisionImage(image: preprocessedUIImage)
         let textRecognizer = TextRecognizer.textRecognizer()
