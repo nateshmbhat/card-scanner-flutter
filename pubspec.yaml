@@ -39,3 +39,8 @@ flutter:
         pluginClass: CardScannerPlugin
       ios:
         pluginClass: CardScannerPlugin
+  assets:
+    - ios/Assets/Images/backButton.png
+    - ios/Assets/Images/blueScanLine.png
+    - ios/Assets/Images/flashOff.png
+    - ios/Assets/Images/flashOn.png

@@ -10,9 +10,10 @@ import UIKit
 import AVFoundation
 import MLKitTextRecognition
 import MLKitVision
+import Flutter
 
 protocol CameraDelegate {
-    func camera(_ camera: CameraViewController, didScan scanResult: Text)
+    func camera(_ camera: CameraViewController, didScan scanResult: Text, sampleBuffer: CMSampleBuffer)
     func cameraDidStopScanning(_ camera: CameraViewController)
 }
 
@@ -35,7 +36,7 @@ class CameraViewController: UIViewController {
         super.viewDidLoad()
         gainCameraPermission()
     }
-    
+
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -122,7 +123,7 @@ class CameraViewController: UIViewController {
         }
     }
     
-    func addInputDeviceToSession() {
+    func addInputDeviceToSession() { 
         captureSession.addInput(input)
     }
     
@@ -133,7 +134,7 @@ class CameraViewController: UIViewController {
             previewLayer.videoGravity = .resizeAspectFill
             previewLayer.isOpaque = true
             self.view.layer.isOpaque = true
-            self.view.layer.addSublayer(previewLayer)
+            self.view.layer.addSublayer(previewLayer)       
         }
     }
     
@@ -201,6 +202,15 @@ class CameraViewController: UIViewController {
             self.view.addSubview(self.flashButton)
         }
     }
+
+    func loadFlutterAsset(named assetName: String) -> UIImage? {
+        let flutterAssetKey = FlutterDartProject.lookupKey(forAsset: assetName)
+        guard let path = Bundle.main.path(forResource: flutterAssetKey, ofType: nil) else {
+            return nil
+        }
+        return UIImage(contentsOfFile: path)
+    }
+
     
     lazy var flashButton: UIButton = {
         let device = AVCaptureDevice.default(for: AVMediaType.video)!
@@ -215,7 +225,7 @@ class CameraViewController: UIViewController {
         
         flashBtn.setImage(
             UIImage(
-                named: device.isTorchOn ? "flashOn" : "flashOff"
+                named: device.isTorchOn ? "FlashOn" : "FlashOff"
             ),
             for: .normal
         )
@@ -245,10 +255,10 @@ class CameraViewController: UIViewController {
                 height: 17 + 10
             )
         )
-        
+
         backBtn.setImage(
             UIImage(
-                named: "backButton"
+                named: "BackButton"
             ),
             for: .normal
         )
@@ -277,7 +287,7 @@ class CameraViewController: UIViewController {
         DispatchQueue.main.async {
             device.toggleTorch()
             self.flashButton.setImage(
-                UIImage(named: device.isTorchOn ? "flashOn" : "flashOff"),
+                UIImage(named: device.isTorchOn ? "FlashOn" : "FlashOff"),
                 for: .normal
             )
         }
@@ -290,10 +300,10 @@ class CameraViewController: UIViewController {
     }
     
     func addAnimatingScanLine() {
-        
-        guard let image = UIImage(named: "blueScanLine", in: Bundle(for: SwiftCardScannerPlugin.self), compatibleWith: nil) else {
-            return
-        }
+        guard let image = UIImage(named: "BlueScanLine")
+            else {
+                return
+            }
         
         let blueScanLineImage = UIImageView(image: image)
         
@@ -328,15 +338,18 @@ class CameraViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if connection.isVideoOrientationSupported {
+        connection.videoOrientation = .portrait
+        }
+
         let visionImage = VisionImage(buffer: sampleBuffer)
-        
-        // .right = portrait mode
-        // .up = landscapeRight
-        visionImage.orientation = orientationForScanning
+    
+        visionImage.orientation = .right
         
         guard let result = try? textRecognizer.results(in: visionImage) else {
             #if DEBUG
@@ -345,7 +358,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             return
         }
         
-        cameraDelegate?.camera(self, didScan: result)
+        cameraDelegate?.camera(self, didScan: result, sampleBuffer: sampleBuffer)
     }
 }
 
@@ -385,6 +398,43 @@ extension CameraViewController {
         @unknown default:
             return .up
         }
+    }
+
+    func imageOrientationFromDeviceOrientation() -> UIImage.Orientation {
+    let deviceOrientation = UIDevice.current.orientation
+    let isUsingFrontCamera = device.position == .front
+    
+    switch deviceOrientation {
+    case .portrait:
+        return isUsingFrontCamera ? .leftMirrored : .right
+    case .landscapeLeft:
+        return isUsingFrontCamera ? .downMirrored : .up
+    case .landscapeRight:
+        return isUsingFrontCamera ? .upMirrored : .down
+    case .portraitUpsideDown:
+        return isUsingFrontCamera ? .rightMirrored : .left
+    default:
+        return .right // Default to portrait mode
+    }
+}
+
+    
+    func extractImageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage? {
+        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            return nil
+        }
+
+        let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+        let context = CIContext()
+
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            print("Error: Unable to create CGImage from CIImage")
+            return nil
+        }
+
+        let imageOrientation = imageOrientationFromDeviceOrientation()
+
+        return UIImage(cgImage: cgImage, scale: 1.0, orientation: .right)
     }
 }
 

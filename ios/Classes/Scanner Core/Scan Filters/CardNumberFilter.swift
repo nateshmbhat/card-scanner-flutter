@@ -22,7 +22,8 @@ class CardNumberFilter: ScanFilter {
     func filter() -> ScanFilterResult? {
         for (blockIndex, block) in visionText.blocks.enumerated() {
             for (_, line) in block.lines.enumerated() {
-                let sanitizedBlockText = line.text.sanitized
+                let transformedBlockText = transformBlockText(blockText: line.text)
+                let sanitizedBlockText = transformedBlockText.sanitized
                 debugLog("Sanitized Card Number : \(sanitizedBlockText)", scannerOptions: scannerOptions)
                 
                 if let firstMatch = cardNumberRegex.firstMatch(
@@ -54,7 +55,18 @@ class CardNumberFilter: ScanFilter {
         
         return nil
     }
-    
+    func transformBlockText(blockText: String) -> String {
+        return blockText.replacingOccurrences(of: "c", with: "C")
+            .replacingOccurrences(of: "o", with: "O")
+            .replacingOccurrences(of: "b", with: "6")
+            .replacingOccurrences(of: "+", with: "4")
+            .replacingOccurrences(of: "L", with: "1")
+            .replacingOccurrences(of: "Y", with: "4")
+            .replacingOccurrences(of: "I", with: "1")
+            .replacingOccurrences(of: "S", with: "5")
+            .replacingOccurrences(of: "D", with: "0")
+
+    }
     
 }
 
