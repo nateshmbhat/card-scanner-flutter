@@ -70,7 +70,6 @@ extension ScanProcessor: CameraDelegate {
              print("Preprocessed text: \(preprocessedText.text)")
 
             guard let cardDetails = self.singleFrameCardScanner.scanSingleFrame(visionText: preprocessedText) else {
-                //print("No Card Details")
                 return
             }
 
@@ -166,9 +165,6 @@ extension ScanProcessor: CameraDelegate {
         }
 
         let preprocessedUIImage = UIImage(cgImage: cgImage)
-
-        //Code for testing filters
-        //cameraViewController!.updatePreprocessedImage(preprocessedUIImage)
     
         let visionImage = VisionImage(image: preprocessedUIImage)
         let textRecognizer = TextRecognizer.textRecognizer()

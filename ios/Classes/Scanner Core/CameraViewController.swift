@@ -31,38 +31,12 @@ class CameraViewController: UIViewController {
     var torchOn: Bool = false
     
     var cameraOrientation: CameraOrientation = .portrait
-
-
-    //Code for testing filters
-    // var preprocessedImageView: UIImageView!
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         gainCameraPermission()
-
-        //Code for testing filters
-        //setupPreprocessedImageView()
     }
 
-    //Code for testing filters
-    // private func setupPreprocessedImageView() {
-    //     preprocessedImageView = UIImageView(frame: CGRect(x: -30, y: 100, width: 600, height: 400))
-    //     preprocessedImageView.contentMode = .scaleAspectFit
-    //     preprocessedImageView.backgroundColor = .clear // Transparent background
-    //     preprocessedImageView.layer.borderColor = UIColor.white.cgColor
-    //     preprocessedImageView.layer.borderWidth = 1.0
-    //     view.addSubview(preprocessedImageView)
-    //     view.bringSubviewToFront(preprocessedImageView)
-    // }
-
-    //Code for testing filters
-    // func updatePreprocessedImage(_ image: UIImage) {
-    //     DispatchQueue.main.async {
-    //         self.preprocessedImageView.image = image
-    //         print("Preprocessed image set to preview")
-    //     }
-    // }
-    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -282,13 +256,6 @@ class CameraViewController: UIViewController {
             )
         )
 
-        //  if let image = loadFlutterAsset(named: "ios/Assets/Images/backButton.png") {
-        //     backBtn.setImage(image, for: .normal)
-        //     print("SUccESS!*9w")
-        //     } else {
-        //         print("Error: backButton.png not found in Flutter assets")
-        //     }
-        
         backBtn.setImage(
             UIImage(
                 named: "BackButton"
@@ -372,27 +339,6 @@ class CameraViewController: UIViewController {
         }
     }
 
-    // func extractImageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage? {
-
-    //     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-    //         print("getImagebuffer fail")
-    //         return nil
-    //     }
-        
-    //     let ciImage = CIImage(cvPixelBuffer: imageBuffer)
-        
-    //     let context = CIContext()
-    //     guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
-    //         print("Error: Unable to create CGImage from CIImage")
-    //         return nil
-    //     }
-        
-    //     let uiImage = UIImage(cgImage: cgImage) 
-
-    //     return uiImage
-    // }
-
-    
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -402,9 +348,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
 
         let visionImage = VisionImage(buffer: sampleBuffer)
-        
-        // .right = portrait mode
-        // .up = landscapeRight
+    
         visionImage.orientation = .right
         
         guard let result = try? textRecognizer.results(in: visionImage) else {
