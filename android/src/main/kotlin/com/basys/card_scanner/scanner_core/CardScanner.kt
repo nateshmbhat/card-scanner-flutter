@@ -1,6 +1,7 @@
 package com.basys.card_scanner.scanner_core
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.CountDownTimer
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
@@ -16,10 +17,18 @@ import com.basys.card_scanner.onCardScanned
 import com.basys.card_scanner.scanner_core.models.CardDetails
 import com.basys.card_scanner.scanner_core.models.CardScannerOptions
 import com.basys.card_scanner.scanner_core.optimizer.CardDetailsScanOptimizer
+import jp.co.cyberagent.android.gpuimage.GPUImage
+import jp.co.cyberagent.android.gpuimage.filter.*
 
-class CardScanner(private val scannerOptions: CardScannerOptions, private val onCardScanned: onCardScanned, private val onCardScanFailed: onCardScanFailed) : ImageAnalysis.Analyzer {
+class CardScanner(
+  private val context: Context,
+  private val scannerOptions: CardScannerOptions,
+  private val onCardScanned: onCardScanned,
+  private val onCardScanFailed: onCardScanFailed
+) : ImageAnalysis.Analyzer {
+
   private val singleFrameCardScanner: SingleFrameCardScanner = SingleFrameCardScanner(scannerOptions)
-  val cardDetailsScanOptimizer: CardDetailsScanOptimizer = CardDetailsScanOptimizer(scannerOptions)
+  private val cardDetailsScanOptimizer: CardDetailsScanOptimizer = CardDetailsScanOptimizer(scannerOptions)
   private var scanCompleted: Boolean = false
 
   init {
@@ -43,7 +52,7 @@ class CardScanner(private val scannerOptions: CardScannerOptions, private val on
   }
 
   companion object {
-    private val TAG: String = "TextRecognitionProcess"
+    private const val TAG = "TextRecognitionProcess"
   }
 
   @OptIn(ExperimentalGetImage::class)
@@ -52,37 +61,51 @@ class CardScanner(private val scannerOptions: CardScannerOptions, private val on
     val mediaImage = imageProxy.image
     if (mediaImage != null) {
       val image = InputImage.fromMediaImage(mediaImage, 90)
+      val preprocessedImage = preprocessImage(image)
 
       val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-      recognizer.process(image)
-              .addOnSuccessListener { visionText ->
-                if (scanCompleted) return@addOnSuccessListener
-                val cardDetails = singleFrameCardScanner.scanSingleFrame(visionText)
-                        ?: return@addOnSuccessListener
+      recognizer.process(preprocessedImage)
+        .addOnSuccessListener { visionText ->
+          if (scanCompleted) return@addOnSuccessListener
+          val cardDetails = singleFrameCardScanner.scanSingleFrame(visionText)
+            ?: return@addOnSuccessListener
 
-                if (scannerOptions.enableDebugLogs) {
-                  debugLog("----------------------------------------------------", scannerOptions)
-                  for (block in visionText.textBlocks) {
-                    debugLog("visionText: TextBlock ============================", scannerOptions)
-                    debugLog("visionText : ${block.text}", scannerOptions)
-                  }
-                  debugLog("----------------------------------------------------", scannerOptions)
-
-                  debugLog("Card details : $cardDetails", scannerOptions)
-                }
-                cardDetailsScanOptimizer.processCardDetails(cardDetails)
-                if (cardDetailsScanOptimizer.isReadyToFinishScan()) {
-                  finishCardScanning(cardDetailsScanOptimizer.getOptimalCardDetails()!!)
-                }
-              }
-              .addOnFailureListener { e ->
-                debugLog("Error : $e", scannerOptions)
-              }
-              .addOnCompleteListener {
-                imageProxy.close()
-              }
+          if (scannerOptions.enableDebugLogs) {
+            debugLog("----------------------------------------------------", scannerOptions)
+            for (block in visionText.textBlocks) {
+              debugLog("visionText: TextBlock ============================", scannerOptions)
+              debugLog("visionText : ${block.text}", scannerOptions)
+            }
+            debugLog("----------------------------------------------------", scannerOptions)
+            debugLog("Card details : $cardDetails", scannerOptions)
+          }
+          cardDetailsScanOptimizer.processCardDetails(cardDetails)
+          if (cardDetailsScanOptimizer.isReadyToFinishScan()) {
+            finishCardScanning(cardDetailsScanOptimizer.getOptimalCardDetails()!!)
+          }
+        }
+        .addOnFailureListener { e ->
+          debugLog("Error : $e", scannerOptions)
+        }
+        .addOnCompleteListener {
+          imageProxy.close()
+        }
     }
+  }
+
+  private fun preprocessImage(inputImage: InputImage): InputImage {
+    val bitmap = inputImage.bitmapInternal ?: return inputImage
+    val gpuImage = GPUImage(context)
+
+    gpuImage.setFilter(GPUImageGrayscaleFilter())
+    gpuImage.setFilter(GPUImageSharpenFilter().apply { setSharpness(1.0f) })
+    gpuImage.setFilter(GPUImageExposureFilter().apply { setExposure(0.5f) })
+    gpuImage.setFilter(GPUImageVignetteFilter())
+
+    val preprocessedBitmap = gpuImage.getBitmapWithFilterApplied(bitmap)
+
+    return InputImage.fromBitmap(preprocessedBitmap, inputImage.rotationDegrees)
   }
 
   private fun finishCardScanning(cardDetails: CardDetails) {

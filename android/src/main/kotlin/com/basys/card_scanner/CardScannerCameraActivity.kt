@@ -149,7 +149,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
     debugLog("card scanner options : $cardScannerOptions", cardScannerOptions)
     val analysisUseCase = ImageAnalysis.Builder().build()
             .also {
-              it.setAnalyzer(cameraExecutor, CardScanner(cardScannerOptions, { cardDetails ->
+              it.setAnalyzer(cameraExecutor, CardScanner(this, cardScannerOptions, { cardDetails ->
                 debugLog("Card recognized : $cardDetails", cardScannerOptions)
 
                 val returnIntent = Intent()
