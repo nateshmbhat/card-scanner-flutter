@@ -15,13 +15,14 @@
 
 ## Features
 
-- 🔒Fully **OFFLINE** scan makes it a completely **secure scanner** !
-- 🎈 Can scan **Expiry date** , **Card Holder name** and **Card Issuer** (lacked by other scanners) along with the **Card number**✨
-- 🔋Powered by Google's Machine Learning models
-- ⚡ Great performance and accuracy
-- 🧹Auto checks the card number for errors using card checksum algorithms
-- 🎚Supports controlling parameters that determine the balance between speed and accuracy
-- ❤️ Simple, powerful, & intuitive API
+- 🔒 Fully **OFFLINE** scan makes it a completely **secure scanner**
+- 🎈 Can scan **Expiry date**,, **Card Holder name**, **Card Issuer** (lacked by other scanners), and **Card number**✨
+- 💯 Embossed card support
+- 🔋 Powered by Google's Machine Learning models
+- ⚡️ Great performance and accuracy
+- 🧹 Auto checks the card number for errors using card checksum algorithms
+- 🎚 Supports controlling parameters that determine the balance between speed and accuracy
+- ❤️ Simple, powerful, and intuitive API
 
 ## Install
 
