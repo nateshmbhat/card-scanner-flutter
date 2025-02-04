@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2
+- upgraded gradle versions and compatibility versions to support newer versions of dart & flutter sdk
+
 #### 1.0.1-prerelease
 - ios bug fix
 
