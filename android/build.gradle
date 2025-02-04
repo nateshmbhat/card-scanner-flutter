@@ -3,7 +3,7 @@ version '1.0'
 
 buildscript {
     ext {
-        kotlin_version = "1.3.72"
+        kotlin_version = "1.5.20"
     }
     repositories {
         google()
@@ -27,13 +27,23 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
-
+    compileSdkVersion 34
+    namespace 'com.nateshmbhat.card_scanner'
     defaultConfig {
         minSdkVersion 21
     }
     lintOptions {
         disable 'InvalidPackage'
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11  // Use Java 11
+        targetCompatibility = JavaVersion.VERSION_11  // Use Java 11
+    }
+
+    // Update Kotlin JVM target to 11 or 17 (recommended)
+    kotlinOptions {
+        jvmTarget = '11'
     }
 }
 

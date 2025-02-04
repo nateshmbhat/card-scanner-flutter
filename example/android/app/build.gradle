@@ -21,6 +21,7 @@ if (flutterVersionName == null) {
     flutterVersionName = '2.0'
 }
 
+apply plugin: 'kotlin-android'
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -31,8 +32,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
-
+    compileSdkVersion 34
+    namespace 'com.nateshmbhat.card_scanner_example'
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -65,9 +66,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11  // Use Java 11
+        targetCompatibility = JavaVersion.VERSION_11  // Use Java 11
     }
+
+    // Update Kotlin JVM target to 11 or 17 (recommended)
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+
 }
 
 flutter {

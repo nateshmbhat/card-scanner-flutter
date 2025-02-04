@@ -9,7 +9,7 @@ class OptionConfigureWidget extends StatefulWidget {
   final void Function(CardScanOptions scanOptions) onScanOptionChanged;
   final CardScanOptions initialOptions;
 
-  const OptionConfigureWidget({Key key, @required this.onScanOptionChanged, this.initialOptions}) : super(key: key);
+  const OptionConfigureWidget({Key? key, required this.onScanOptionChanged, required this.initialOptions}) : super(key: key);
 
   @override
   _OptionConfigureWidgetState createState() => _OptionConfigureWidgetState();
