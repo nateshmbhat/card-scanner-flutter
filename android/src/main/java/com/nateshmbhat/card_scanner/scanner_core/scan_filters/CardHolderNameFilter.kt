@@ -47,7 +47,7 @@ class CardHolderNameFilter(visionText: Text, scannerOptions: CardScannerOptions,
     if (cardHolder.endsWith("valid from") || cardHolder.endsWith("valid thru")) return false;
     if (CardHolderNameConstants.defaultBlackListedWords
                     .union(scannerOptions.cardHolderNameBlackListedWords.toSet())
-                    .contains(cardHolder.toLowerCase(Locale.ENGLISH))) {
+                    .contains(cardHolder.lowercase(Locale.ENGLISH))) {
       return false;
     }
     return true;
