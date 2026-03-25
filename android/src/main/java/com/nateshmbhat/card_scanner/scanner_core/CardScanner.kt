@@ -30,10 +30,12 @@ class CardScanner(private val scannerOptions: CardScannerOptions?, private val o
 
           override fun onFinish() {
             if (scanCompleted) return
+            scanCompleted = true
             debugLog("Card scanner timeout reached", scannerOptions);
             val cardDetails = cardDetailsScanOptimizer.getOptimalCardDetails()
             if (cardDetails != null) {
-              finishCardScanning(cardDetails)
+              debugLog("OPTIMAL Card details : $cardDetails", scannerOptions)
+              onCardScanned(cardDetails)
             } else {
               onCardScanFailed()
             }

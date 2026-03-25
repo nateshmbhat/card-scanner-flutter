@@ -170,6 +170,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
     textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     debugLog("card scanner options : $cardScannerOptions", cardScannerOptions)
+    cardScanner?.cancelTimer()
     cardScanner = CardScanner(cardScannerOptions, { cardDetails ->
       debugLog("Card recognized : $cardDetails", cardScannerOptions)
 
@@ -222,6 +223,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
   }
 
   override fun onBackPressed() {
+    cardScanner?.cancelTimer()
     setResult(Activity.RESULT_CANCELED)
     super.onBackPressed()
   }
