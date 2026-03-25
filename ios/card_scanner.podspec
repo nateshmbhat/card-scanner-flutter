@@ -17,8 +17,8 @@ A new Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.resources = 'Assets/*.png'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMLKit/TextRecognition', '~> 3.2.0'
-  s.platform = :ios, '12.0'
+  s.dependency 'GoogleMLKit/TextRecognition', '>= 6.0.0'
+  s.platform = :ios, '15.0'
   s.static_framework = true
 
   # Flutter.framework supports both x86_64 and arm64 simulators.

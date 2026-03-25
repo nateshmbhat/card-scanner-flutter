@@ -20,7 +20,7 @@ protocol CameraDelegate {
 class CameraViewController: UIViewController {
     var scansDroppedSinceLastReset: Int = 0
     
-    let textRecognizer = TextRecognizer.textRecognizer()
+    let textRecognizer = TextRecognizer.textRecognizer(options: TextRecognizerOptions())
     
     var cameraDelegate: CameraDelegate?
     var captureSession: AVCaptureSession!
