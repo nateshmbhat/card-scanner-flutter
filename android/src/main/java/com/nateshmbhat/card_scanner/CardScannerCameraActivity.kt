@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -39,11 +41,15 @@ class CardScannerCameraActivity : AppCompatActivity() {
   private var textRecognizer: TextRecognizer? = null
   private var analysisUseCase: ImageAnalysis? = null
   private var cardScannerOptions: CardScannerOptions? = null
+  private var cardScanner: CardScanner? = null
+  private var camera: Camera? = null
+  private var isTorchOn: Boolean = false
   private lateinit var cameraExecutor: ExecutorService
   lateinit var animator: ObjectAnimator
   lateinit var scannerLayout: View
   lateinit var scannerBar: View
   lateinit var backButton: View
+  lateinit var flashButton: ImageButton
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -53,11 +59,23 @@ class CardScannerCameraActivity : AppCompatActivity() {
     scannerLayout = findViewById(R.id.scannerLayout)
     scannerBar = findViewById(R.id.scannerBar)
     backButton = findViewById(R.id.backButton)
+    flashButton = findViewById(R.id.flashButton)
     supportActionBar?.hide()
+
+    val promptText = findViewById<TextView>(R.id.promptText)
+    val prompt = cardScannerOptions?.prompt ?: ""
+    if (prompt.isEmpty()) {
+      promptText.visibility = View.GONE
+    } else {
+      promptText.text = prompt
+    }
 
     val vto = scannerLayout.viewTreeObserver
     backButton.setOnClickListener {
       finish()
+    }
+    flashButton.setOnClickListener {
+      toggleFlashlight()
     }
     vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
       override fun onGlobalLayout() {
@@ -133,7 +151,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
     val previewView = findViewById<PreviewView>(R.id.cameraView)
 
     previewUseCase!!.setSurfaceProvider(previewView.surfaceProvider)
-    cameraProvider!!.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, previewUseCase)
+    camera = cameraProvider!!.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, previewUseCase)
   }
 
   private fun bindAnalysisUseCase() {
@@ -152,20 +170,31 @@ class CardScannerCameraActivity : AppCompatActivity() {
     textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     debugLog("card scanner options : $cardScannerOptions", cardScannerOptions)
+    cardScanner = CardScanner(cardScannerOptions, { cardDetails ->
+      debugLog("Card recognized : $cardDetails", cardScannerOptions)
+
+      val returnIntent: Intent = Intent()
+      returnIntent.putExtra(SCAN_RESULT, cardDetails)
+      setResult(Activity.RESULT_OK, returnIntent)
+      finish()
+    }, onCardScanFailed = {
+      onBackPressed()
+    })
     val analysisUseCase = ImageAnalysis.Builder().build()
             .also {
-              it.setAnalyzer(cameraExecutor, CardScanner(cardScannerOptions, { cardDetails ->
-                debugLog("Card recognized : $cardDetails", cardScannerOptions)
-
-                val returnIntent: Intent = Intent()
-                returnIntent.putExtra(SCAN_RESULT, cardDetails)
-                setResult(Activity.RESULT_OK, returnIntent)
-                finish()
-              }, onCardScanFailed = {
-                onBackPressed()
-              }))
+              it.setAnalyzer(cameraExecutor, cardScanner!!)
             }
     cameraProvider!!.bindToLifecycle( /* lifecycleOwner= */this, cameraSelector!!, analysisUseCase)
+  }
+
+  private fun toggleFlashlight() {
+    camera?.let {
+      if (it.cameraInfo.hasFlashUnit()) {
+        isTorchOn = !isTorchOn
+        it.cameraControl.enableTorch(isTorchOn)
+        flashButton.setImageResource(if (isTorchOn) R.drawable.ic_flash_on else R.drawable.ic_flash_off)
+      }
+    }
   }
 
   companion object {
@@ -188,6 +217,7 @@ class CardScannerCameraActivity : AppCompatActivity() {
 
   override fun onDestroy() {
     super.onDestroy()
+    cardScanner?.cancelTimer()
     textRecognizer?.close()
   }
 

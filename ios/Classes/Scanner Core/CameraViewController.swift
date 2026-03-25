@@ -170,6 +170,7 @@ class CameraViewController: UIViewController {
     
     
     func addScanYourCardToProceedLabel() {
+        guard !self.prompt.isEmpty else { return }
         DispatchQueue.main.async {
             let center = self.view.center
             let scanYourCardToProceedLabel = UILabel(

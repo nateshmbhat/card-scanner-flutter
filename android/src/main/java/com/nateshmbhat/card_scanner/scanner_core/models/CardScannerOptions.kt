@@ -16,7 +16,8 @@ data class CardScannerOptions(
     val enableLuhnCheck: Boolean,
     val cardScannerTimeOut: Int,
     val enableDebugLogs: Boolean,
-    val possibleCardHolderNamePositions: List<String>
+    val possibleCardHolderNamePositions: List<String>,
+    val prompt: String
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -30,7 +31,8 @@ data class CardScannerOptions(
         enableLuhnCheck = parcel.readByte() != 0.toByte(),
         cardScannerTimeOut = parcel.readInt(),
         enableDebugLogs = parcel.readByte() != 0.toByte(),
-        possibleCardHolderNamePositions = parcel.createStringArrayList() ?: emptyList()
+        possibleCardHolderNamePositions = parcel.createStringArrayList() ?: emptyList(),
+        prompt = parcel.readString() ?: ""
     )
 
     constructor(configMap: Map<String, String>) : this(
@@ -45,7 +47,8 @@ data class CardScannerOptions(
         cardScannerTimeOut = configMap[ParcelKeys.cardScannerTimeOut.value]?.toInt() ?: 0,
         enableDebugLogs = configMap[ParcelKeys.enableDebugLogs.value]?.toBoolean() ?: false,
         possibleCardHolderNamePositions = configMap[ParcelKeys.possibleCardHolderNamePositions.value]?.split(',')
-            ?: listOf(CardHolderNameScanPositions.belowCardNumber.value)
+            ?: listOf(CardHolderNameScanPositions.belowCardNumber.value),
+        prompt = configMap[ParcelKeys.prompt.value] ?: ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -60,6 +63,7 @@ data class CardScannerOptions(
         parcel.writeInt(cardScannerTimeOut)
         parcel.writeByte(if (enableDebugLogs) 1 else 0)
         parcel.writeStringList(possibleCardHolderNamePositions ?: emptyList())
+        parcel.writeString(prompt)
     }
 
     override fun describeContents(): Int {
@@ -79,7 +83,8 @@ data class CardScannerOptions(
             enableLuhnCheck("enableLuhnCheck"),
             cardScannerTimeOut("cardScannerTimeOut"),
             enableDebugLogs("enableDebugLogs"),
-            possibleCardHolderNamePositions("possibleCardHolderNamePositions")
+            possibleCardHolderNamePositions("possibleCardHolderNamePositions"),
+            prompt("prompt")
         }
 
         override fun createFromParcel(parcel: Parcel): CardScannerOptions {

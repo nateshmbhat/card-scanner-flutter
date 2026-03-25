@@ -40,6 +40,10 @@ class CardScanOptions {
   ///defaults to [CardHolderNameScanPosition.belowCardNumber]
   final List<CardHolderNameScanPosition> possibleCardHolderNamePositions;
 
+  /// Prompt text displayed on the scanner screen.
+  /// Defaults to empty string which hides the prompt label.
+  final String prompt;
+
   const CardScanOptions(
       {this.scanExpiryDate = true,
       this.scanCardHolderName = false,
@@ -51,7 +55,8 @@ class CardScanOptions {
       this.enableLuhnCheck = true,
       this.enableDebugLogs = false,
       this.cardScannerTimeOut = 0,
-      this.possibleCardHolderNamePositions = const [CardHolderNameScanPosition.belowCardNumber]});
+      this.possibleCardHolderNamePositions = const [CardHolderNameScanPosition.belowCardNumber],
+      this.prompt = ''});
 
   Map<String, String> get map {
     final List<String> possibleNamePositions = [];
@@ -71,7 +76,8 @@ class CardScanOptions {
       'enableLuhnCheck': enableLuhnCheck.toString(),
       'cardScannerTimeOut': cardScannerTimeOut.toString(),
       'enableDebugLogs': enableDebugLogs.toString(),
-      'possibleCardHolderNamePositions': possibleNamePositions.join(",")
+      'possibleCardHolderNamePositions': possibleNamePositions.join(","),
+      'prompt': prompt
     };
   }
 }
