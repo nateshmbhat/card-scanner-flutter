@@ -20,25 +20,29 @@ class CardScanner(private val scannerOptions: CardScannerOptions?, private val o
   val singleFrameCardScanner: SingleFrameCardScanner = SingleFrameCardScanner(scannerOptions!!)
   val cardDetailsScanOptimizer: CardDetailsScanOptimizer = CardDetailsScanOptimizer(scannerOptions!!)
   var scanCompleted: Boolean = false
+  private var timer: CountDownTimer? = null
 
   init {
     if (scannerOptions != null) {
       if (scannerOptions.cardScannerTimeOut > 0) {
-        val timer = object : CountDownTimer((scannerOptions.cardScannerTimeOut!! * 1000).toLong(), 1000) {
+        timer = object : CountDownTimer((scannerOptions.cardScannerTimeOut * 1000).toLong(), 1000) {
           override fun onTick(millisUntilFinished: Long) {}
 
           override fun onFinish() {
+            if (scanCompleted) return
+            scanCompleted = true
             debugLog("Card scanner timeout reached", scannerOptions);
             val cardDetails = cardDetailsScanOptimizer.getOptimalCardDetails()
             if (cardDetails != null) {
-              finishCardScanning(cardDetails)
+              debugLog("OPTIMAL Card details : $cardDetails", scannerOptions)
+              onCardScanned(cardDetails)
             } else {
               onCardScanFailed()
             }
             debugLog("Finishing card scan with card details : ${cardDetails}", scannerOptions);
           }
         }
-        timer.start()
+        timer?.start()
       }
     }
   }
@@ -88,8 +92,15 @@ class CardScanner(private val scannerOptions: CardScannerOptions?, private val o
   }
 
   private fun finishCardScanning(cardDetails: CardDetails) {
+    if (scanCompleted) return
     debugLog("OPTIMAL Card details : $cardDetails", scannerOptions)
     scanCompleted = true
+    timer?.cancel()
     onCardScanned(cardDetails)
+  }
+
+  fun cancelTimer() {
+    scanCompleted = true
+    timer?.cancel()
   }
 }

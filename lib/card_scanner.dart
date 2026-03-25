@@ -17,7 +17,6 @@ class CardScanner {
     scanOptions ??= CardScanOptions();
     final scanResult = await _channel.invokeMapMethod<String, String>(
         _scan_card, scanOptions.map);
-    print("method channel : GOT VALUE FROM METHOD CHANNEL : $scanResult");
 
     if (scanResult != null) return CardDetails.fromMap(scanResult);
 

@@ -28,6 +28,17 @@
                 android:layout_height="17dp"
                 android:textSize="24sp"/>
 
+            <ImageButton
+                android:id="@+id/flashButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="28dp"
+                android:layout_marginTop="28dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_flash_off"
+                android:scaleType="fitCenter"
+                android:contentDescription="Toggle flashlight" />
 
         </RelativeLayout>
 
@@ -76,12 +87,12 @@
             android:background="@color/semitransparent" >
 
         <TextView
+            android:id="@+id/promptText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:lineSpacingExtra="6sp"
             android:layout_centerInParent="true"
-            android:text="Scan your card to proceed"
             android:textAlignment="center"
             android:textColor="#f0f0f5"
             android:textSize="12sp" />
