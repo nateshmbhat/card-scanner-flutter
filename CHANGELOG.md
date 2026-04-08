@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.4
+- Fix crash when pressing back during scan timeout on Android and iOS
+- Add configurable prompt text via `CardScanOptions.prompt` parameter
+- Add flashlight toggle button to Android scanner UI
+- Remove debug print that logged sensitive card data
+- Upgrade ML Kit text recognition: iOS >= 6.0.0, Android 19.0.1
+- Upgrade CameraX to stable 1.3.4, appcompat to 1.6.1, constraintlayout to 2.1.4
+- Bump iOS minimum deployment target to 15.0
+- Replace deprecated jcenter() with mavenCentral() on Android
+
 ## 1.0.3
 - Updated iOS dependencies to resolve version conflicts with Firebase and Google Sign-In
 - Updated GoogleMLKit/TextRecognition to version ~> 3.2.0 for better compatibility
